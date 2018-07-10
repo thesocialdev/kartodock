@@ -1,0 +1,3 @@
+[submodule "docker-kosmtik"]
+	path = kosmtik
+	url = git@github.com:Joxit/docker-kosmtik.git
