@@ -1,44 +1,111 @@
 version: '3'
+
+networks:
+  frontend:
+    driver: ${NETWORKS_DRIVER}
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
 services:
-  postgres-postgis:
-    build: ./postgres-osm
-    volumes:
-      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
-      - ${DATA_PATH_HOST}/pbf:/home/pbf
-      - ../osm-bright.tm2source:/home/src
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    network_mode: "host"
+
+### Workspace Utilities ##################################
+  workspace:
+    build: ./workspace
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    ports:
+      - "${WORKSPACE_SSH_PORT}:22"
+    tty: true
+    networks:
+      - frontend
+      - backend
+
+### Katotherian ##################################
+  kartotherian:
+    build: ./kartotherian
+    ports:
+      - "6533:6533"
+    depends_on:
+      - workspace
+      - postgres-postgis
+      - cassandra
+      - redis
+    volumes:
+      - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
+    tty: true
+    networks:
+      - frontend
+      - backend    
+
+### PostgreSQL PostGis ##################################
+  postgres-postgis:
+    build: ./postgres-postgis
+    volumes:
+      - ${DATA_PATH_HOST}/data/postgres:/var/lib/postgresql/data
+      - ${DATA_PATH_HOST}/pbf:/home/pbf
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend    
+
+### Mapbox Studio Classic ##################################
   mapbox-studio-classic:
     image: stepankuzmin/mapbox-studio-classic
     volumes: 
-      - ~/wikimedia-workspace/mapstack:/root
-      - ../data/.mapbox-studio:/root/.mapbox-studio
+      - ${APP_CODE_PATH_HOST}:/root/source
+      - ${DATA_PATH_HOST}/.mapbox-studio:/root/.mapbox-studio
     ports:
       - "3000:3000"
-    network_mode: "host"
+    depends_on:
+      - workspace
+      - postgres-postgis
+    environment:
+      - DOCKER_HOST_IP=${DOCKER_HOST_IP}
+    networks:
+      - frontend
+      - backend 
+
+### Cassandra ##################################
   cassandra: 
     image: spotify/cassandra
     ports:
       - "9042:9042"
-    network_mode: "host"
+    networks:
+      - backend    
+
+### Redis ##################################
   redis:
     image: redis
     ports:
       - "6379:6379"
-    network_mode: "host"
-  # kosmtik:
-  #   build: ./kosmtik
-  #   volumes:
-  #     - ../osm-bright.tm2:/opt/project
-  #     - ../osm-bright.tm2source:/opt/project/src
-  #   network_mode: "host"
-  #   ports:
-  #     - "6789:6789"
-  #   environment:
-  #     - USER_ID=1000
-  #   tty: true
+    networks:
+      - backend 
+
+### Kosmtik ##################################
+  kosmtik:
+    build: ./kosmtik
+    volumes:
+      - ../osm-bright.tm2:/opt/project
+      - ../osm-bright.tm2source:/opt/project/src
+    ports:
+      - "6789:6789"
+    environment:
+      - USER_ID=1000
+    depends_on:
+      - workspace
+      - postgres-postgis
+    tty: true
+    networks:
+      - frontend
+      - backend 
