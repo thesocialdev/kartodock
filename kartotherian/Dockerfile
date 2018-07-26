@@ -46,10 +46,9 @@ ENV NVM_DIR $HOME/.nvm
 RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash \
 	&& . $NVM_DIR/nvm.sh && nvm install 6.11.1
 
+COPY config.docker.yaml /etc/opt/config.docker.yaml
+COPY startup.sh /usr/local/bin/start.sh
+
 WORKDIR /home/kartotherian
 
-CMD . $NVM_DIR/nvm.sh && nvm use 6.11.1 \
-	&& npm install \
-	# && npm install --build-from-source=mapnik --fallback-to-build=false \
-	&& npm test \
-	&& node server.js -c config.dev.yaml
+# CMD /bin/bash /usr/local/bin/start.sh

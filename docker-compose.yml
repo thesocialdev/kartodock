@@ -32,13 +32,19 @@ services:
     build: ./kartotherian
     ports:
       - "6533:6533"
-    depends_on:
-      - workspace
-      - postgres-postgis
-      - cassandra
-      - redis
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - KARTOTHERIAN_NPM_LINK=${KARTOTHERIAN_NPM_LINK}
+      - KARTOTHERIAN_NPM_TEST=${KARTOTHERIAN_NPM_TEST}
+    # depends_on:
+    #   - workspace
+    #   - postgres-postgis
+    #   - cassandra
+      # - redis
     volumes:
-      - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
+      - ${APP_CODE_PATH_HOST}:/home
     tty: true
     networks:
       - frontend
@@ -48,7 +54,7 @@ services:
   postgres-postgis:
     build: ./postgres-postgis
     volumes:
-      - ${DATA_PATH_HOST}/data/postgres:/var/lib/postgresql/data
+      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
       - ${DATA_PATH_HOST}/pbf:/home/pbf
     ports:
       - "${POSTGRES_PORT}:5432"
@@ -61,7 +67,7 @@ services:
 
 ### Mapbox Studio Classic ##################################
   mapbox-studio-classic:
-    image: stepankuzmin/mapbox-studio-classic
+    build: ./mapbox-studio-classic
     volumes: 
       - ${APP_CODE_PATH_HOST}:/root/source
       - ${DATA_PATH_HOST}/.mapbox-studio:/root/.mapbox-studio
@@ -78,17 +84,21 @@ services:
 
 ### Cassandra ##################################
   cassandra: 
-    image: spotify/cassandra
+    build: ./cassandra
+    volumes:
+      - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
-      - "9042:9042"
+      - "${CASSANDRA_PORT}:9042"
     networks:
       - backend    
 
 ### Redis ##################################
   redis:
-    image: redis
+    build: ./redis
+    volumes:
+        - ${DATA_PATH_HOST}/redis:/data
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
     networks:
       - backend 
 
