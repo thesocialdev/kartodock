@@ -68,7 +68,7 @@ services:
       variables: 
         cassandra-pswd: cassandra
         cassandra-servers:
-        - localhost
+        - cassandra
         cassandra-user: cassandra
         osmdb-pswd: $POSTGRES_PASSWORD
         osmdb-user: $POSTGRES_USER
@@ -96,7 +96,7 @@ services:
       geoshapes:
         allowUserQueries: true
         database: gis
-        host: localhost
+        host: postgres-postgis
         lineTable: planet_osm_line
         password: $POSTGRES_PASSWORD
         polygonTable: planet_osm_polygon

@@ -38,13 +38,17 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - KARTOTHERIAN_NPM_LINK=${KARTOTHERIAN_NPM_LINK}
       - KARTOTHERIAN_NPM_TEST=${KARTOTHERIAN_NPM_TEST}
-    # depends_on:
-    #   - workspace
-    #   - postgres-postgis
-    #   - cassandra
-      # - redis
+      - KARTOTHERIAN_NPM_START=${KARTOTHERIAN_NPM_START}
+      - KARTOTHERIAN_LINK_PATH=${KARTOTHERIAN_LINK_PATH}
+      - KARTOTHERIAN_SKIP_LINK_PATH=${KARTOTHERIAN_SKIP_LINK_PATH}
+    depends_on:
+      - workspace
+      - postgres-postgis
+      - cassandra
+      - redis
     volumes:
-      - ${APP_CODE_PATH_HOST}:/home
+      - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
+      - ${APP_CODE_PATH_HOST}/dependencies:/home/link
     tty: true
     networks:
       - frontend

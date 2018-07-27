@@ -47,8 +47,9 @@ RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.s
 	&& . $NVM_DIR/nvm.sh && nvm install 6.11.1
 
 COPY config.docker.yaml /etc/opt/config.docker.yaml
-COPY startup.sh /usr/local/bin/start.sh
+COPY sources.docker.yaml /etc/opt/sources.docker.yaml
+COPY start.sh /usr/local/bin/start.sh
 
 WORKDIR /home/kartotherian
 
-# CMD /bin/bash /usr/local/bin/start.sh
+CMD /bin/bash /usr/local/bin/start.sh

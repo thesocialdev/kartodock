@@ -46,3 +46,10 @@ REDIS_PORT=6379
 ### CASSANDRA #################################################
 
 CASSANDRA_PORT=9042
+
+### KARTOTHERIAN #################################################
+KARTOTHERIAN_NPM_LINK=true
+KARTOTHERIAN_NPM_TEST=true
+KARTOTHERIAN_NPM_START=true
+KARTOTHERIAN_LINK_PATH=/home/link
+KARTOTHERIAN_SKIP_LINK_PATH=/home/link/skip
