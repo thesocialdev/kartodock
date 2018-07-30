@@ -11,7 +11,7 @@ APP_CODE_PATH_HOST=../
 APP_CODE_PATH_CONTAINER=/home/root
 
 # Choose storage path on your machine. For all storage systems
-DATA_PATH_HOST=
+DATA_PATH_HOST=../data
 
 ### Drivers ################################################
 

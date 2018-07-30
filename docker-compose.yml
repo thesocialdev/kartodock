@@ -48,7 +48,7 @@ services:
       - redis
     volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
-      - ${APP_CODE_PATH_HOST}/dependencies:/home/link
+      - ${APP_CODE_PATH_HOST}/dependencies:${KARTOTHERIAN_LINK_PATH}
     tty: true
     networks:
       - frontend

@@ -27,7 +27,7 @@ then
 fi
 
 # Install dependencies
-npm install --build-from-source=mapnik --fallback-to-build=false
+npm install
 
 # If test is set it will run npm test everytime the container is started
 if [ "$KARTOTHERIAN_NPM_TEST" = true ];
