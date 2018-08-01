@@ -29,9 +29,9 @@ services:
 
 ### Katotherian ##################################
   kartotherian:
-    build: ./kartotherian
+    build: ./kartotherian/mapnik3.0.20
     ports:
-      - "6533:6533"
+      - "65343:6533"
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}

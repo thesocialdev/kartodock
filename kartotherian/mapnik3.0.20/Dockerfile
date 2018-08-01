@@ -4,42 +4,41 @@ RUN apt-get update && apt-get install -y nodejs \
 	nodejs-legacy \
 	git \
 	wget \
-	# curl \
 	python \
     libboost-filesystem-dev \
     libboost-program-options-dev \
-    libboost-python-dev libboost-regex-dev \
+    libboost-regex-dev \
     libboost-system-dev libboost-thread-dev \
-	libicu-dev \
-    python-dev libxml2 libxml2-dev \
+    libxml2 libxml2-dev \
     libfreetype6 libfreetype6-dev \
     libjpeg-dev \
     libpng-dev \
-    libproj-dev \
     libtiff5-dev \
-    libcairo2 libcairo2-dev python-cairo python-cairo-dev \
-    libcairomm-1.0-1v5 libcairomm-1.0-dev \
+    libcairo2 libcairo2-dev \
     ttf-unifont ttf-dejavu ttf-dejavu-core ttf-dejavu-extra \
-    git build-essential python-nose \
-    libgdal-dev python-gdal \
+    build-essential \
+    libgdal-dev \
+    libharfbuzz-bin \
+    libharfbuzz-dev \
+    libmapnik-dev \
  	&& rm -rf /var/lib/apt/lists/*
 
-# Mapnik Dependencies
-RUN wget http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-0.9.34.tar.bz2 && \
-	tar xf harfbuzz-0.9.34.tar.bz2 && \
-	rm harfbuzz-0.9.34.tar.bz2 && \
-	cd harfbuzz-0.9.34 && \
-	./configure && make && make install && \
-	ldconfig && \
-	cd ../ && \
-	rm -rf harfbuzz-0.9.34
+# This library is enough to run kartotherian
+RUN wget https://apt.wikimedia.org/mapnik/libmapnik3.0_3.0.20%2Bds-1_amd64.deb && \
+    dpkg -i libmapnik3.0_3.0.20+ds-1_amd64.deb && \
+    rm libmapnik3.0_3.0.20+ds-1_amd64.deb
 
-# Mapnik v3.0.20
-RUN wget https://github.com/mapnik/mapnik/releases/download/v3.0.20/mapnik-v3.0.20.tar.bz2 && \
-	tar xf mapnik-v3.0.20.tar.bz2 && \
-	cd mapnik-v3.0.20 && \
-	./configure && \
-	make && make install
+RUN wget https://apt.wikimedia.org/mapnik/libmapnik-dev_3.0.20%2Bds-1_amd64.deb && \
+    dpkg -i libmapnik-dev_3.0.20+ds-1_amd64.deb && \
+    rm libmapnik-dev_3.0.20+ds-1_amd64.deb
+
+RUN wget https://apt.wikimedia.org/mapnik/mapnik-doc_3.0.20%2Bds-1_all.deb && \
+    dpkg -i mapnik-doc_3.0.20+ds-1_all.deb && \
+    rm mapnik-doc_3.0.20+ds-1_all.deb
+
+RUN wget https://apt.wikimedia.org/mapnik/mapnik-utils_3.0.20%2Bds-1_amd64.deb && \
+    dpkg -i mapnik-utils_3.0.20+ds-1_amd64.deb && \
+    rm mapnik-utils_3.0.20+ds-1_amd64.deb
 
 ENV NVM_DIR $HOME/.nvm
 
