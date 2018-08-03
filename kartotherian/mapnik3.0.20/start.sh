@@ -40,3 +40,5 @@ if [ "$KARTOTHERIAN_NPM_START" = true ];
 then
 	node server.js -c config.docker.yaml
 fi
+
+sleep 10d

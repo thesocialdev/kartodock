@@ -1,11 +1,5 @@
 version: '3'
 
-networks:
-  frontend:
-    driver: ${NETWORKS_DRIVER}
-  backend:
-    driver: ${NETWORKS_DRIVER}
-
 services:
 
 ### Workspace Utilities ##################################
@@ -23,9 +17,7 @@ services:
     ports:
       - "${WORKSPACE_SSH_PORT}:22"
     tty: true
-    networks:
-      - frontend
-      - backend
+    network_mode: host
 
 ### Katotherian ##################################
   kartotherian:
@@ -50,9 +42,7 @@ services:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
       - ${APP_CODE_PATH_HOST}/dependencies:${KARTOTHERIAN_LINK_PATH}
     tty: true
-    networks:
-      - frontend
-      - backend    
+    network_mode: host    
 
 ### PostgreSQL PostGis ##################################
   postgres-postgis:
@@ -66,8 +56,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - backend    
+    network_mode: host    
 
 ### Mapbox Studio Classic ##################################
   mapbox-studio-classic:
@@ -82,9 +71,7 @@ services:
       - postgres-postgis
     environment:
       - DOCKER_HOST_IP=${DOCKER_HOST_IP}
-    networks:
-      - frontend
-      - backend 
+    network_mode: host 
 
 ### Cassandra ##################################
   cassandra: 
@@ -93,8 +80,7 @@ services:
       - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
       - "${CASSANDRA_PORT}:9042"
-    networks:
-      - backend    
+    network_mode: host    
 
 ### Redis ##################################
   redis:
@@ -103,8 +89,7 @@ services:
         - ${DATA_PATH_HOST}/redis:/data
     ports:
       - "${REDIS_PORT}:6379"
-    networks:
-      - backend 
+    network_mode: host 
 
 ### Kosmtik ##################################
   kosmtik:
@@ -120,6 +105,4 @@ services:
       - workspace
       - postgres-postgis
     tty: true
-    networks:
-      - frontend
-      - backend 
+    network_mode: host 
