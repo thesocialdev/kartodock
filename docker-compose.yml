@@ -29,7 +29,7 @@ services:
 
 ### Katotherian ##################################
   kartotherian:
-    build: ./kartotherian/mapnik3.0.20
+    build: ./kartotherian
     ports:
       - "6533:6533"
     environment:
