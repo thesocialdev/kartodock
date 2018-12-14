@@ -1,0 +1,37 @@
+version: '3'
+
+networks:
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+services:
+
+### Cassandra ##################################
+  cassandra-jessie:
+    build:
+      context: ./cassandra
+      dockerfile: kartotherian-jessie
+      # dockerfile: kartotherian-stretch
+    environment:
+      - CASSANDRA_TILEDUMP_DIR=${CASSANDRA_TILEDUMP_DIR}
+    volumes:
+      - ${DATA_PATH_HOST}/cassandra/2.1.13:/var/lib/cassandra
+      - ${APP_CODE_PATH_HOST}/tools/lib/maps-cassandra-dumper:/usr/share/maven/ref/repository
+      - ${DATA_PATH_HOST}/cassandra/tile-dump:${CASSANDRA_TILEDUMP_DIR}
+    ports:
+      - "${CASSANDRA_PORT}:9042"
+      - "5000:5000"
+    networks:
+      - backend
+
+  cassandra-stretch: 
+    build:
+      context: ./cassandra
+      dockerfile: kartotherian-stretch
+    volumes:
+      - ${APP_CODE_PATH_HOST}/tools/lib/maps-cassandra-dumper:/usr/share/maven/ref/repository
+      - ${DATA_PATH_HOST}/cassandra/2.2.6:/var/lib/cassandra
+    ports:
+      - "${CASSANDRA_PORT_2}:9042"
+    networks:
+      - backend
