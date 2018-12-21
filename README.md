@@ -26,7 +26,6 @@ docker-compose up kartotherian
 ## TODO
 - [ ] Add Tilerator container
 - [ ] Change Cassandra container and create environment variables for authentication
-- [ ] Upgrade mapnik when version 3.0.20 is backported
 - [ ] Fix Kosmtik container
 - [ ] Proper configuration to use Sources and Styles with Mapbox Studio Classic
 - [ ] Remove package already installed in node_modules before linking
