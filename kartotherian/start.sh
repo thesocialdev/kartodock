@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define NPM version
-. $NVM_DIR/nvm.sh && nvm use 6.11.1
+. $NVM_DIR/nvm.sh && nvm use 10.14.2
 
 # Create Docker Config File from template
 if [ ! -f /home/kartotherian/config.docker.yaml ]; then
