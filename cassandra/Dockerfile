@@ -1,1 +1,1 @@
-FROM spotify/cassandra
+FROM cassandra:2.2.6

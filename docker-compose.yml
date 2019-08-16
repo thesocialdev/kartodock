@@ -15,6 +15,8 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - WORKSPACE_NCPU=${WORKSPACE_NCPU}
+      - WORKSPACE_MEMORY=${WORKSPACE_MEMORY}
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
@@ -36,11 +38,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - KARTOTHERIAN_NPM_LINK=${KARTOTHERIAN_NPM_LINK}
-      - KARTOTHERIAN_NPM_TEST=${KARTOTHERIAN_NPM_TEST}
-      - KARTOTHERIAN_NPM_START=${KARTOTHERIAN_NPM_START}
-      - KARTOTHERIAN_LINK_PATH=${KARTOTHERIAN_LINK_PATH}
-      - KARTOTHERIAN_SKIP_LINK_PATH=${KARTOTHERIAN_SKIP_LINK_PATH}
+      - KARTOTHERIAN_TEST=${KARTOTHERIAN_TEST}
+      - KARTOTHERIAN_START=${KARTOTHERIAN_START}
+      - KARTOTHERIAN_NODE_VERSION=${KARTOTHERIAN_NODE_VERSION}
     depends_on:
       - workspace
       - postgres-postgis
@@ -48,7 +48,6 @@ services:
       - redis
     volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
-      - ${APP_CODE_PATH_HOST}/dependencies:${KARTOTHERIAN_LINK_PATH}
     tty: true
     networks:
       - frontend
@@ -59,32 +58,16 @@ services:
     build: ./postgres-postgis
     volumes:
       - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
-      - ${DATA_PATH_HOST}/pbf:/home/pbf
     ports:
       - "${POSTGRES_PORT}:5432"
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - backend    
-
-### Mapbox Studio Classic ##################################
-  mapbox-studio-classic:
-    build: ./mapbox-studio-classic
-    volumes: 
-      - ${APP_CODE_PATH_HOST}:/root/source
-      - ${DATA_PATH_HOST}/.mapbox-studio:/root/.mapbox-studio
-    ports:
-      - "3000:3000"
     depends_on:
       - workspace
-      - postgres-postgis
-    environment:
-      - DOCKER_HOST_IP=${DOCKER_HOST_IP}
     networks:
-      - frontend
-      - backend 
+      - backend    
 
 ### Cassandra ##################################
   cassandra: 
@@ -106,20 +89,38 @@ services:
     networks:
       - backend 
 
-### Kosmtik ##################################
-  kosmtik:
-    build: ./kosmtik
-    volumes:
-      - ../osm-bright.tm2:/opt/project
-      - ../osm-bright.tm2source:/opt/project/src
+### Mapbox Studio Classic ##################################
+  mapbox-studio-classic:
+    build: ./mapbox-studio-classic
+    volumes: 
+      - ${APP_CODE_PATH_HOST}:/root/source
+      - ${DATA_PATH_HOST}/.mapbox-studio:/root/.mapbox-studio
     ports:
-      - "6789:6789"
-    environment:
-      - USER_ID=1000
+      - "3000:3000"
     depends_on:
       - workspace
       - postgres-postgis
-    tty: true
+    environment:
+      - DOCKER_HOST_IP=${DOCKER_HOST_IP}
     networks:
       - frontend
       - backend 
+### Graphite statsd ##################################
+  statsd:
+    image: graphiteapp/graphite-statsd
+    # volumes:
+    #   - ${DATA_PATH_HOST}/graphite/configs:/opt/graphite/conf
+    #   - ${DATA_PATH_HOST}/graphite/data:/opt/graphite/storage
+    #   - ${DATA_PATH_HOST}/statsd:/opt/statsd
+    ports:
+      - "8000:80"
+      - "2003-2004:2003-2004"
+      - "2023-2024:2023-2024"
+      - "8125:8125"
+      - "8126:8126"
+    restart: always
+    networks:
+      - backend 
+
+
+### Maputnik?? ################################## 
