@@ -8,7 +8,7 @@
 APP_CODE_PATH_HOST=../
 
 # Point to where the `APP_CODE_PATH_HOST` should be in the container. You may add flags to the path `:cached`, `:delegated`. When using Docker Sync add `:nocopy`
-APP_CODE_PATH_CONTAINER=/home/root
+APP_CODE_PATH_CONTAINER=/srv
 
 # Choose storage path on your machine. For all storage systems
 DATA_PATH_HOST=../data
@@ -29,6 +29,8 @@ DOCKER_HOST_IP=172.17.0.1
 ### WORKSPACE ########################################
 
 WORKSPACE_SSH_PORT=2221
+WORKSPACE_NCPU=2
+WORKSPACE_MEMORY=4096
 
 ### POSTGRES ########################################
 
@@ -36,8 +38,6 @@ POSTGRES_DB=gis
 POSTGRES_USER=default
 POSTGRES_PASSWORD=secret
 POSTGRES_PORT=5432
-POSTGRES_POPULATE_OSM_DATABASE=false
-POSTGRES_RUN_QUERIES=true
 
 ### REDIS #################################################
 
@@ -46,10 +46,3 @@ REDIS_PORT=6379
 ### CASSANDRA #################################################
 
 CASSANDRA_PORT=9042
-
-### KARTOTHERIAN #################################################
-KARTOTHERIAN_NPM_LINK=true
-KARTOTHERIAN_NPM_TEST=true
-KARTOTHERIAN_NPM_START=true
-KARTOTHERIAN_LINK_PATH=/home/link
-KARTOTHERIAN_SKIP_LINK_PATH=/home/link/skip
