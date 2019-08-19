@@ -5,7 +5,7 @@ v1.0.0
 ------
 - Introduce osm-initial-import script for setting up OSM DB similar to what WMF production uses
 - Fix exact versions of postgres-postgis and cassandra
-- Add makefile with gisdock operations commands
+- Add makefile with kartodock operations commands
 - Add statsd container to the stack
 - Setup container with the proper dependencies
 - Introduce generate_config script to create the proper config for kartotherian and tilerator

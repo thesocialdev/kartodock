@@ -1,4 +1,4 @@
-############################# Useful commands for gisdock operations #############################
+############################# Useful commands for kartodock operations #############################
 include .env
 
 # Run osm-initial-import

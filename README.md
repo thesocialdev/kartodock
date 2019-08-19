@@ -1,4 +1,4 @@
-# Gisdock - Docker for GIS stacks and relatives
+# Kartodock - Docker for GIS stacks and relatives
 This repo is a prototype used to build all the needed stack technology to run [Kartotherian](https://github.com/kartotherian/kartotherian) and its repos.
 
 ## Installation
@@ -10,13 +10,13 @@ By default `APP_CODE_PATH_HOST=../`, the directory tree should be something like
 
 ```
 ${APP_CODE_PATH_HOST}/
-├── gisdock
+├── kartodock
 └──  kartotherian
 ```
 
 To start the setup execute the following commands: 
 ```
-cd gisdock
+cd kartodock
 cp env-example .env
 docker-compose up kartotherian
 make clean
