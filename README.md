@@ -4,7 +4,7 @@ This repo is a prototype used to build all the needed stack technology to run [K
 ## Installation
 Get [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-To run the Kartotherian stack, make sure that you have [Kartotherian](https://github.com/kartotherian/kartotherian) installed under `APP_CODE_PATH_HOST` environment configuration.
+To run the Kartotherian stack, make sure that you have [Kartotherian](https://gerrit.wikimedia.org/r/admin/projects/mediawiki/services/kartotherian) installed under `APP_CODE_PATH_HOST` environment configuration.
 
 By default `APP_CODE_PATH_HOST=../`, the directory tree should be something like this:
 
