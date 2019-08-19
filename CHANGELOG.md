@@ -1,6 +1,22 @@
 Changelog
 =========
 
+v1.0.0
+------
+- Introduce osm-initial-import script for setting up OSM DB similar to what WMF production uses
+- Fix exact versions of postgres-postgis and cassandra
+- Add makefile with gisdock operations commands
+- Add statsd container to the stack
+- Setup container with the proper dependencies
+- Introduce generate_config script to create the proper config for kartotherian and tilerator
+- Delete docker-compose.host.yml
+- Remove start.sh since kartotherian now uses lerna and is much easier to handle linked packages
+- Setup container with the proper dependencies
+- Introduce generate_config script to create the proper config for kartotherian and tilerator
+- Delete docker-compose.host.yml
+- Remove start.sh since kartotherian now uses lerna and is much easier to handle linked packages
+- Hygiene: remove Kosmtik since it was never used
+
 
 v0.1.0
 ------
