@@ -23,18 +23,18 @@ metrics:
   #port: 8125
 
 services:
-  - name: kartotherian
+  - name: tilerator
     # a relative path or the name of an npm package, if different from name
-    module: ./app.js
+    module: ../app.js
     # optionally, a version constraint of the npm package
     # version: ^0.4.0
     # per-service config
     conf:
-      port: 6533
-      # interface: localhost # uncomment to only listen on localhost
+      port: 16534
+
       # more per-service config settings
       # the location of the spec, defaults to spec.yaml if not specified
-      spec: ./spec.template.yaml
+      spec: ../spec.template.yaml
       # allow cross-domain requests to the API (default '*')
       cors: '*'
       # to disable use:
@@ -59,12 +59,8 @@ services:
       #   - if-match
       #   - user-agent
       #   - x-request-id
-      # Uncomment to restrict connections to localhost only
-      # interface: localhost
-      # Uncomment to disable the X-Powered-By header
-      # expose_version: false
+      redis: redis://redis
 
-      # Kartotherian variables and sources
       variables: 
         cassandra-pswd: cassandra
         cassandra-servers:
@@ -73,51 +69,26 @@ services:
         osmdb-pswd: $POSTGRES_PASSWORD
         osmdb-user: $POSTGRES_USER
 
-      sources: sources.docker.yaml
+      sources: /etc/opt/sources.docker.yaml
 
       modules:
-      - "tilelive-tmstyle"
+      - tilelive-tmstyle
       - "@kartotherian/autogen"
-      - "@kartotherian/babel"
       - "@kartotherian/cassandra"
       - "@kartotherian/layermixer"
       - "@kartotherian/overzoom"
-      - "@kartotherian/postgres"
       - "@kartotherian/substantial"
       - "@kartotherian/tilelive-tmsource"
       - "@kartotherian/tilelive-vector"
-      - "@mapbox/tilejson"
+      - "@kartotherian/babel"
 
-      requestHandlers:
-      - "@kartotherian/geoshapes"
-      - "@kartotherian/maki"
-      - "@kartotherian/snapshot"
+      # If true, do not enable admin interface
+      daemonOnly: false
 
-      geoshapes:
-        allowUserQueries: true
-        database: gis
-        host: postgres-postgis
-        lineTable: planet_osm_line
-        password: $POSTGRES_PASSWORD
-        polygonTable: planet_osm_polygon
-        table: planet_osm_polygon
-        user: $POSTGRES_USER
+      # If true, runs this instance without processing tiles
+      # This could be good for queue management
+      uiOnly: false
 
-      # allowedDomains:
-      #   http:
-      #     - localhost:8080
-      #     - 127.0.0.1:8080
-      #     - wmflabs.org
-      #   https:
-      #     - mediawiki.org
-      #     - wikibooks.org
-      #     - wikidata.org
-      #     - wikimedia.org
-      #     - wikimediafoundation.org
-      #     - wikinews.org
-      #     - wikipedia.org
-      #     - wikiquote.org
-      #     - wikisource.org
-      #     - wikiversity.org
-      #     - wikivoyage.org
-      #     - wiktionary.org
+      # Set different timeout for tile generation in case mapnik get stuck on
+      # locked resource while reading Postgres
+      tileTimeOut: 90000
