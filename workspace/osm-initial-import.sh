@@ -69,8 +69,8 @@ function initial_osm_import() {
   echo "starting initial OSM import"
     psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
     osm2pgsql \
-        --create --slim --flat-nodes nodes.bin -C ${WORKSPACE_MEMORY} --number-processes ${WORKSPACE_NCPU} \
-        --hstore -U ${POSTGRES_USER} -H ${database_host} -d ${POSTGRES_DB} -E 4326 \
+        --create --slim --cache ${WORKSPACE_MEMORY} --number-processes ${WORKSPACE_NCPU} \
+        --hstore -U ${POSTGRES_USER} -H ${database_host} -d ${POSTGRES_DB} -E 3857 \
         ${pbf_dir}/${filename} 2>&1 | tee ${log_file}
 
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
@@ -82,23 +82,22 @@ function initial_osm_import() {
 
 function import_water_lines() {
     echo "starting water line import"
-    echo "WARNING: water-polygons-split-4326.zip size is 539M"
+    echo "WARNING: water-polygons-split-3857.zip size is 539M"
     cd ${pbf_dir}
-    if [ ! -f "$pbf_dir/water-polygons-split-4326.zip" ]; then
-        curl -O https://osmdata.openstreetmap.de/download/water-polygons-split-4326.zip
+    if [ ! -f "$pbf_dir/water-polygons-split-3857.zip" ]; then
+        curl -O https://osmdata.openstreetmap.de/download/water-polygons-split-3857.zip
     fi
-    unzip water-polygons-split-4326.zip
-    rm water-polygons-split-4326.zip
-    shp2pgsql -c -s 4326 -g way water-polygons-split-4326/water_polygons.shp water_polygons | psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB}
-    rm -rf water-polygons-split-4326
+    if [ ! -f "$pbf_dir/water-polygons-split-3857/water_polygons.shp" ]; then
+        unzip water-polygons-split-3857.zip
+    fi
+    shp2pgsql -c -s 3857 -g way water-polygons-split-3857/water_polygons.shp water_polygons | psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB}
     echo "water line import completed"
-
 }
 
 function custom_functions_and_indexes() {
   echo "starting creation of custom functions and indexes"
   psql -U ${POSTGRES_USER} -h ${database_host} -Xd ${POSTGRES_DB} -f ${postgis_vt_util_sql_lib}
-
+  cd ${kartotherian_dir}
   for module in ${modules_with_sql}; do
     echo "executing SQL in: ${kartotherian_dir}/node_modules/${module}/sql"
     for sql_file in `ls ${kartotherian_dir}/node_modules/${module}/sql/*.sql`; do
@@ -115,12 +114,14 @@ function cleanup() {
   echo "starting cleanup"
   rm "${pbf_dir}/${filename}.md5"
   rm "${pbf_dir}/${filename}"
+  rm "${pbf_dir}/water-polygons-split-4326.zip"
+  rm -rf "${pbf_dir}/water-polygons-split-4326"
   echo "cleanup completed"
 }
 
-#download_pbf
-#reset_postgres
-#initial_osm_import
-#import_water_lines
-#custom_functions_and_indexes
+download_pbf
+reset_postgres
+initial_osm_import
+import_water_lines
+custom_functions_and_indexes
 #cleanup
