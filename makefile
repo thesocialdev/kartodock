@@ -7,7 +7,7 @@ include .env
 # 			ARGS='-p http://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf \
 #	 		-H postgres-postgis'
 osm:
-	docker-compose exec workspace osm-initial-import $(ARGS)
+	docker-compose exec workspace bash -c "PGPASSWORD=secret osm-initial-import $(ARGS)"
 
 generate_config:
 	docker-compose exec kartotherian generate_config
@@ -25,11 +25,21 @@ run_kartotherian:
 npm_test:
 	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && npm test"
 
+npm_audit:
+	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && npm run audit"
+
 npm_install:
 	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && npm install --unsafe-perm"
 	
 clean:
 	docker-compose exec kartotherian bash -c "./clean_node_modules.sh"
+
+link_external:
+	# TODO
+	# Link external libraries for local development
+	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/$(PROJECT) \
+			&& rm -rf /home/kartotherian/packages/$(PROJECT)/node_modules/$(DEPENDENCY) \
+			&& . /.nvm/nvm.sh && nvm use 10.15.2 && npm link /home/dependencies/$(DEPENDENCY)"
 
 install:
 	# TODO

@@ -119,9 +119,9 @@ function cleanup() {
   echo "cleanup completed"
 }
 
-download_pbf
-reset_postgres
-initial_osm_import
-import_water_lines
+# download_pbf
+# reset_postgres
+# initial_osm_import
+# import_water_lines
 custom_functions_and_indexes
 #cleanup

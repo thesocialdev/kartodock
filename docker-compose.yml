@@ -46,6 +46,7 @@ services:
       - redis
     volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
+      - ${APP_CODE_PATH_HOST}/dependencies:/home/dependencies
     tty: true
     networks:
       - frontend
@@ -122,3 +123,18 @@ services:
 
 
 ### Maputnik?? ################################## 
+### PgAdmin 4 ################################
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres-postgis
+    networks:
+      - backend
