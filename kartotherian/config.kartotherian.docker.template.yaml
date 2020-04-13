@@ -77,21 +77,21 @@ services:
 
       modules:
       - "tilelive-tmstyle"
-      - "@kartotherian/autogen"
-      - "@kartotherian/babel"
-      - "@kartotherian/cassandra"
-      - "@kartotherian/layermixer"
-      - "@kartotherian/overzoom"
-      - "@kartotherian/postgres"
-      - "@kartotherian/substantial"
+      - "@wikimedia/kartotherian-autogen"
+      - "@wikimedia/kartotherian-babel"
+      - "@wikimedia/kartotherian-cassandra"
+      - "@wikimedia/kartotherian-layermixer"
+      - "@wikimedia/kartotherian-overzoom"
+      - "@wikimedia/kartotherian-postgres"
+      - "@wikimedia/kartotherian-substantial"
       - "@kartotherian/tilelive-tmsource"
       - "@kartotherian/tilelive-vector"
       - "@mapbox/tilejson"
 
       requestHandlers:
-      - "@kartotherian/geoshapes"
-      - "@kartotherian/maki"
-      - "@kartotherian/snapshot"
+      - "@wikimedia/kartotherian-geoshapes"
+      - "@wikimedia/kartotherian-maki"
+      - "@wikimedia/kartotherian-snapshot"
 
       geoshapes:
         allowUserQueries: true

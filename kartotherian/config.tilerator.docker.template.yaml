@@ -73,14 +73,14 @@ services:
 
       modules:
       - tilelive-tmstyle
-      - "@kartotherian/autogen"
-      - "@kartotherian/cassandra"
-      - "@kartotherian/layermixer"
-      - "@kartotherian/overzoom"
-      - "@kartotherian/substantial"
+      - "@wikimedia/kartotherian-autogen"
+      - "@wikimedia/kartotherian-cassandra"
+      - "@wikimedia/kartotherian-layermixer"
+      - "@wikimedia/kartotherian-overzoom"
+      - "@wikimedia/kartotherian-substantial"
+      - "@wikimedia/kartotherian-babel"
       - "@kartotherian/tilelive-tmsource"
       - "@kartotherian/tilelive-vector"
-      - "@kartotherian/babel"
 
       # If true, do not enable admin interface
       daemonOnly: false
