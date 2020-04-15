@@ -37,7 +37,7 @@ WORKSPACE_MEMORY=4096
 PGDATABASE=gis
 PGUSER=default
 PGPASSWORD=secret
-POSTGRES_PORT=5432
+PGPORT=5432
 
 ### REDIS #################################################
 

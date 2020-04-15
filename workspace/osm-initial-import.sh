@@ -5,7 +5,7 @@ set -e
 pbf_dir="/srv/pbf"
 kartotherian_dir="/srv/kartotherian/packages/kartotherian"
 postgis_vt_util_sql_lib="${kartotherian_dir}/node_modules/@kartotherian/postgis-vt-util/lib.sql"
-modules_with_sql="@kartotherian/osm-bright-source @kartotherian/geoshapes"
+modules_with_sql="@kartotherian/osm-bright-source @wikimedia/kartotherian-geoshapes"
 database_host="postgres-postgis"
 log_file=/var/log/osm-initial-import.log
 pbf_file_url=
