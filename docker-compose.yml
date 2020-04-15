@@ -12,9 +12,9 @@ services:
   workspace:
     build: ./workspace
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
       - WORKSPACE_NCPU=${WORKSPACE_NCPU}
       - WORKSPACE_MEMORY=${WORKSPACE_MEMORY}
     volumes:
@@ -36,9 +36,9 @@ services:
       - "6533:6533"
       - "16534:16534"
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
     depends_on:
       - workspace
       - postgres-postgis
@@ -59,9 +59,9 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
     depends_on:
       - workspace
     networks:

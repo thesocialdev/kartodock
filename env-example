@@ -34,9 +34,9 @@ WORKSPACE_MEMORY=4096
 
 ### POSTGRES ########################################
 
-POSTGRES_DB=gis
-POSTGRES_USER=default
-POSTGRES_PASSWORD=secret
+PGDATABASE=gis
+PGUSER=default
+PGPASSWORD=secret
 POSTGRES_PORT=5432
 
 ### REDIS #################################################

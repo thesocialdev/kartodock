@@ -61,16 +61,16 @@ function download_pbf() {
 
 function reset_postgres() {
   echo "starting reset of prosgresql database"
-  psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB} -c 'DROP TABLE IF EXISTS admin, planet_osm_line, planet_osm_point, planet_osm_polygon, planet_osm_roads, water_polygons CASCADE;'
+  psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE} -c 'DROP TABLE IF EXISTS admin, planet_osm_line, planet_osm_point, planet_osm_polygon, planet_osm_roads, water_polygons CASCADE;'
   echo "reset of prosgresql database completed"
 }
 
 function initial_osm_import() {
   echo "starting initial OSM import"
-    psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
+    psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
     osm2pgsql \
         --create --slim --cache ${WORKSPACE_MEMORY} --number-processes ${WORKSPACE_NCPU} \
-        --hstore -U ${POSTGRES_USER} -H ${database_host} -d ${POSTGRES_DB} -E 3857 \
+        --hstore -U ${PGUSER} -H ${database_host} -d ${PGDATABASE} -E 3857 \
         ${pbf_dir}/${filename} 2>&1 | tee ${log_file}
 
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
@@ -90,23 +90,23 @@ function import_water_lines() {
     if [ ! -f "$pbf_dir/water-polygons-split-3857/water_polygons.shp" ]; then
         unzip water-polygons-split-3857.zip
     fi
-    shp2pgsql -c -s 3857 -g way water-polygons-split-3857/water_polygons.shp water_polygons | psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB}
+    shp2pgsql -c -s 3857 -g way water-polygons-split-3857/water_polygons.shp water_polygons | psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE}
     echo "water line import completed"
 }
 
 function custom_functions_and_indexes() {
   echo "starting creation of custom functions and indexes"
-  psql -U ${POSTGRES_USER} -h ${database_host} -Xd ${POSTGRES_DB} -f ${postgis_vt_util_sql_lib}
+  psql -U ${PGUSER} -h ${database_host} -Xd ${PGDATABASE} -f ${postgis_vt_util_sql_lib}
   cd ${kartotherian_dir}
   for module in ${modules_with_sql}; do
     echo "executing SQL in: ${kartotherian_dir}/node_modules/${module}/sql"
     for sql_file in `ls ${kartotherian_dir}/node_modules/${module}/sql/*.sql`; do
       echo "  executing: ${sql_file}"
-      psql -U ${POSTGRES_USER} -h ${database_host} -Xd ${POSTGRES_DB} -f ${sql_file}
+      psql -U ${PGUSER} -h ${database_host} -Xd ${PGDATABASE} -f ${sql_file}
     done
   done
 
-  psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB} -c 'SELECT populate_admin();'
+  psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE} -c 'SELECT populate_admin();'
   echo "creation of custom functions and indexes completed"
 }
 

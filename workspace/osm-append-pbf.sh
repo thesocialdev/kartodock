@@ -62,10 +62,10 @@ function download_pbf() {
 
 function initial_osm_import() {
   echo "starting initial OSM import"
-    psql -U ${POSTGRES_USER} -h ${database_host} -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
+    psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
     osm2pgsql \
         --create --slim --cache ${WORKSPACE_MEMORY} --number-processes ${WORKSPACE_NCPU} \
-        --hstore -U ${POSTGRES_USER} -H ${database_host} -d ${POSTGRES_DB} -E 3857 \
+        --hstore -U ${PGUSER} -H ${database_host} -d ${PGDATABASE} -E 3857 \
         ${pbf_dir}/${filename} 2>&1 | tee ${log_file}
 
   if [ ${PIPESTATUS[0]} -ne 0 ]; then

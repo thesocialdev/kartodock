@@ -70,8 +70,8 @@ services:
         cassandra-servers:
         - cassandra
         cassandra-user: cassandra
-        osmdb-pswd: $POSTGRES_PASSWORD
-        osmdb-user: $POSTGRES_USER
+        osmdb-pswd: $PGPASSWORD
+        osmdb-user: $PGUSER
 
       sources: /etc/opt/sources.docker.yaml
 
@@ -89,7 +89,6 @@ services:
       - "@mapbox/tilejson"
 
       requestHandlers:
-      - "@wikimedia/kartotherian-geoshapes"
       - "@wikimedia/kartotherian-maki"
       - "@wikimedia/kartotherian-snapshot"
 
@@ -98,10 +97,10 @@ services:
         database: gis
         host: postgres-postgis
         lineTable: planet_osm_line
-        password: $POSTGRES_PASSWORD
+        password: $PGPASSWORD
         polygonTable: planet_osm_polygon
         table: planet_osm_polygon
-        user: $POSTGRES_USER
+        user: $PGUSER
         wikidataQueryService: https://query.wikidata.org/bigdata/namespace/wdq/sparql
 
       # allowedDomains:

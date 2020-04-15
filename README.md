@@ -25,22 +25,22 @@ make npm_install
 ### OSM initial import
 After the container is up you need to setup you OSM DB. The osm-initial-script which execute the initial OSM import is not prepared for full planet import, you should pick a small set of the planet from the [Geofrabrik website](http://download.geofabrik.de/). Get the PBF file link from your choice and execute the following command passing it as an argument with `-p` flag, you can also identify the DB host with `-H`, the default is `postgres-postgis`:
 ```
-make osm ARGS='-p http://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf'
+make osm ARGS='-p http://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf -H postgres-postgis'
 ```
 The example above might take up to 30 minutes to fully setup.
 
 WARNING: the script downloads water polygons shapefile with 539M size.
 
-### Cassandra Keyspace setup
-In the first load, Cassandra need to have the keyspace properly set. You can do it manually or leave it to the first execution of tilerator, both approachs works.
-```
-make keyspace_setup
-```
-
 ### Kartotherian config generation
 In order to make Kartotherian and Tilerator able to access the Databases, you have to generate the configs from the templates.
 ```
 make generate_config
+```
+
+### Cassandra Keyspace setup
+In the first load, Cassandra need to have the keyspace properly set. You can do it manually or leave it to the first execution of tilerator, both approachs works.
+```
+make keyspace_setup
 ```
 
 ## Execution
@@ -77,3 +77,4 @@ make clean
 - [ ] Installation script
 - [ ] Implement nodemon for kartotherian/tilerator
 - [ ] Setup oficial Wikimedia nodejs images
+- [ ] Make it possible to persist generated config between executions
