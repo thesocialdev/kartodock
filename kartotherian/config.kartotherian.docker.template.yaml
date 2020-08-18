@@ -65,7 +65,7 @@ services:
       # expose_version: false
 
       # Kartotherian variables and sources
-      variables: 
+      variables:
         cassandra-pswd: cassandra
         cassandra-servers:
         - cassandra

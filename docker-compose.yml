@@ -49,13 +49,14 @@ services:
     tty: true
     networks:
       - frontend
-      - backend    
+      - backend
 
 ### PostgreSQL PostGis ##################################
   postgres-postgis:
     build: ./postgres-postgis
     volumes:
-      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+#      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
+      - ${DATA_PATH_HOST}/imposm:/var/lib/postgresql/data
     ports:
       - "${PGPORT}:5432"
     environment:
@@ -71,14 +72,14 @@ services:
       - backend    
 
 ### Cassandra ##################################
-  cassandra: 
+  cassandra:
     build: ./cassandra
     volumes:
       - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
       - "${CASSANDRA_PORT}:9042"
     networks:
-      - backend    
+      - backend
 
 ### Redis ##################################
   redis:
@@ -88,12 +89,12 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
     networks:
-      - backend 
+      - backend
 
 ### Mapbox Studio Classic ##################################
   mapbox-studio-classic:
     build: ./mapbox-studio-classic
-    volumes: 
+    volumes:
       - ${APP_CODE_PATH_HOST}:/root/source
       - ${DATA_PATH_HOST}/.mapbox-studio:/root/.mapbox-studio
     ports:
@@ -105,7 +106,7 @@ services:
       - DOCKER_HOST_IP=${DOCKER_HOST_IP}
     networks:
       - frontend
-      - backend 
+      - backend
 ### Graphite statsd ##################################
   statsd:
     image: graphiteapp/graphite-statsd
@@ -121,7 +122,7 @@ services:
       - "8126:8126"
     restart: always
     networks:
-      - backend 
+      - backend
 
 
 ### Maputnik?? ################################## 

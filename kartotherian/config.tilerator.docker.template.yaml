@@ -61,7 +61,7 @@ services:
       #   - x-request-id
       redis: redis://redis
 
-      variables: 
+      variables:
         cassandra-pswd: cassandra
         cassandra-servers:
         - cassandra

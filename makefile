@@ -3,11 +3,10 @@ include .env
 
 # Run osm-initial-import
 #
-# Usage: make osm \ 
-# 			ARGS='-p http://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf \
-#	 		-H postgres-postgis'
+# Usage: make osm \
+# 			ARGS='-p http://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf'
 osm:
-	docker-compose exec workspace osm-initial-import $(ARGS)
+	docker-compose exec workspace osm-initial-import $(ARGS) -s -H postgres-postgis
 
 generate_config:
 	docker-compose exec kartotherian generate_config
