@@ -28,8 +28,6 @@ while getopts "d:hH:p:-:" opt; do
   h)  show_help
       exit 0
       ;;
-  H)  database_host="${OPTARG}"
-      ;;
   esac
 done
 
@@ -67,7 +65,7 @@ function reset_postgres() {
 
 function initial_osm_import() {
   echo "starting initial OSM import"
-    psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
+    psql -h ${database_host} -U ${PGUSER} -d ${PGDATABASE} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
     osm2pgsql \
         --create --slim --cache ${WORKSPACE_MEMORY} --number-processes ${WORKSPACE_NCPU} \
         --hstore -U ${PGUSER} -H ${database_host} -d ${PGDATABASE} -E 3857 \
@@ -90,23 +88,23 @@ function import_water_lines() {
     if [ ! -f "$pbf_dir/water-polygons-split-3857/water_polygons.shp" ]; then
         unzip water-polygons-split-3857.zip
     fi
-    shp2pgsql -c -s 3857 -g way water-polygons-split-3857/water_polygons.shp water_polygons | psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE}
+    shp2pgsql -c -s 3857 -g way water-polygons-split-3857/water_polygons.shp water_polygons | psql -h ${database_host} -U ${PGUSER} -d ${PGDATABASE}
     echo "water line import completed"
 }
 
 function custom_functions_and_indexes() {
   echo "starting creation of custom functions and indexes"
-  psql -U ${PGUSER} -h ${database_host} -Xd ${PGDATABASE} -f ${postgis_vt_util_sql_lib}
+  psql -h ${database_host} -U ${PGUSER} -Xd ${PGDATABASE} -f ${postgis_vt_util_sql_lib}
   cd ${kartotherian_dir}
   for module in ${modules_with_sql}; do
     echo "executing SQL in: ${kartotherian_dir}/node_modules/${module}/sql"
     for sql_file in `ls ${kartotherian_dir}/node_modules/${module}/sql/*.sql`; do
       echo "  executing: ${sql_file}"
-      psql -U ${PGUSER} -h ${database_host} -Xd ${PGDATABASE} -f ${sql_file}
+      psql -h ${database_host} -U ${PGUSER} -Xd ${PGDATABASE} -f ${sql_file}
     done
   done
 
-  psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE} -c 'SELECT populate_admin();'
+  psql -h ${database_host} -U ${PGUSER} -d ${PGDATABASE} -c 'SELECT populate_admin();'
   echo "creation of custom functions and indexes completed"
 }
 
