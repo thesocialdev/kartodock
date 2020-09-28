@@ -11,7 +11,8 @@ genraw:
       host: ''
       type: postgis
     set:
-      host: postgres-postgis
+      host: { var: osmdb-host }
+      port: { var: osmdb-port }
       user: {var: osmdb-user}
       password: {var: osmdb-pswd}
 # expand name_ attributes into individual tags

@@ -68,6 +68,8 @@ services:
         cassandra-user: cassandra
         osmdb-pswd: $PGPASSWORD
         osmdb-user: $PGUSER
+        osmdb-host: $PGHOST
+        osmdb-port: $PGPORT
 
       sources: /etc/opt/sources.docker.yaml
 

@@ -86,10 +86,19 @@ function initial_osm_import() {
         -write
 
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
-    echo "osm2pgsql failed to complete initial import"
+    echo "imposm3 failed to complete initial import"
     exit -1
   fi
-  echo "initial OSM import completed"
+  echo "initial OSM import completed, starting production deploy"
+  imposm import \
+        -config /srv/kartosm/config.json \
+        -deployproduction
+
+  if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    echo "imposm3 failed to deploy import"
+    exit -1
+  fi
+  echo "initial OSM import deployed to production schema"
 }
 
 function import_water_lines() {
@@ -135,7 +144,7 @@ if [ "$scripts_only" = false ]; then
   initial_osm_import
 fi
 if [ "$exec_water_polygons" = true ]; then
-  #import_water_lines
+  import_water_lines
 fi
 #custom_functions_and_indexes
 #cleanup
