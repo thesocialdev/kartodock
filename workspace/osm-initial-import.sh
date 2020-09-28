@@ -10,7 +10,7 @@ database_host="postgres-postgis"
 log_file=/var/log/osm-initial-import.log
 pbf_file_url=
 scripts_only=false
-exec_water_polygons=false
+exec_water_polygons=true
 # Prepare config.json
 cp /srv/kartosm/config.template.json /srv/kartosm/config.json && \
   perl -pe 's/\$([_A-Z]+)/$ENV{$1}/g' -i /srv/kartosm/config.json
@@ -33,7 +33,7 @@ while getopts "d:hH:s:w:p:-:" opt; do
   h)  show_help
       exit 0
       ;;
-  s)  scripts_only=true
+  s)  scripts_only=false
       ;;
   w)  exec_water_polygons=true
       ;;
@@ -135,7 +135,7 @@ if [ "$scripts_only" = false ]; then
   initial_osm_import
 fi
 if [ "$exec_water_polygons" = true ]; then
-  import_water_lines
+  #import_water_lines
 fi
-custom_functions_and_indexes
+#custom_functions_and_indexes
 #cleanup
