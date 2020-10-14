@@ -11,6 +11,9 @@ osm:
 generate_config:
 	docker-compose exec kartotherian generate_config
 
+generate_config_osm2pgsql:
+	docker-compose exec kartotherian-osm2pgsql generate_config
+
 # Cassandra Keyspace setup https://wikitech.wikimedia.org/wiki/Maps/Keyspace_Setup
 keyspace_setup:
 	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/tilerator/scripts/tileshell.js --config /etc/opt/config.tilerator.docker.yaml --source /etc/opt/sources.docker.yaml"
@@ -20,6 +23,12 @@ run_tilerator:
 
 run_kartotherian:
 	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
+
+run_tilerator_osm2pgsql:
+	docker-compose exec kartotherian-osm2pgsql bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/tilerator/server.js -c /etc/opt/config.tilerator.docker.yaml"
+
+run_kartotherian_osm2pgsql:
+	docker-compose exec kartotherian-osm2pgsql bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
 
 npm_test:
 	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && npm test"

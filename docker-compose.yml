@@ -43,14 +43,16 @@ services:
       - PGUSER=${PGUSER}
       - PGPASSWORD=${PGPASSWORD}
       - PGPORT=5432
-      - PGHOST=postgre-postgis
+      - PGHOST=postgres-postgis
+      - CASSANDRA_HOST=cassandra
+      - CASSANDRA_PORT=9042
     depends_on:
       - workspace
       - postgres-postgis
       - cassandra
       - redis
     volumes:
-      - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
+      - ${APP_CODE_PATH_HOST}/kartotherian-imposm3:/home/kartotherian
       - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
     tty: true
     networks:
@@ -67,15 +69,16 @@ services:
       - PGDATABASE=${PGDATABASE}
       - PGUSER=${PGUSER}
       - PGPASSWORD=${PGPASSWORD}
-      - PGPORT=6534
+      - PGPORT=5432
       - PGHOST=postgres-postgis-osm2pgsql
+      - CASSANDRA_HOST=cassandra-osm2pgsql
     depends_on:
       - workspace
-      - postgres-postgis
+      - postgres-postgis-osm2pgsql
       - cassandra
       - redis
     volumes:
-      - ${APP_CODE_PATH_HOST}/kartotherian-osm2pgsql:/home/kartotherian
+      - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
     tty: true
     networks:
       - frontend
@@ -127,6 +130,16 @@ services:
       - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
       - "${CASSANDRA_PORT}:9042"
+    networks:
+      - backend
+
+  ### Cassandra ##################################
+  cassandra-osm2pgsql:
+    build: ./cassandra
+    volumes:
+      - ${DATA_PATH_HOST}/cassandra-osm2pgsql:/var/lib/cassandra
+    ports:
+      - "9043:9042"
     networks:
       - backend
 
