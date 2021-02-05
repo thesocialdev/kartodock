@@ -9,9 +9,14 @@ modules_with_sql="@kartotherian/osm-bright-source @wikimedia/kartotherian-geosha
 database_host="postgres-postgis"
 log_file=/var/log/osm-initial-import.log
 pbf_file_url=
+scripts_only=false
+exec_water_polygons=true
+# Prepare config.json
+cp /srv/kartosm/config.template.json /srv/kartosm/config.json && \
+  perl -pe 's/\$([_A-Z]+)/$ENV{$1}/g' -i /srv/kartosm/config.json
 
 function show_help() {
-  echo "osm-initial-import -p <pbf_file_url> [-H <database_host>]"
+  echo "osm-initial-import -p <pbf_file_url> [-H <database_host>] [-s]"
   echo "  pbf_file_url: look for small dumps unless you want the whole world, which can take up to 30 hours processing"
   echo "  database_host: hostname of the postgresql database, default to `hostname -f`"
   echo ""
@@ -21,19 +26,26 @@ function show_help() {
   echo "        -p http://download.geofabrik.de/asia/israel-and-palestine-latest.osm.pbf \\"
 }
 
-while getopts "d:hH:p:-:" opt; do
+while getopts "d:hH:s:w:p:-:" opt; do
   case "${opt}" in
   p)  pbf_file_url="${OPTARG}"
       ;;
   h)  show_help
       exit 0
       ;;
+  s)  scripts_only=false
+      ;;
+  w)  exec_water_polygons=true
+      ;;
   esac
 done
+if [ "$scripts_only" = false ]; then
 
 if [ "${pbf_file_url}" == "" ] ; then
     echo "pbf file URL is mandatory (-p)"
     exit -1
+fi
+
 fi
 regex='(.*)/(.*)$'
 [[ $pbf_file_url =~ $regex ]]
@@ -59,23 +71,34 @@ function download_pbf() {
 
 function reset_postgres() {
   echo "starting reset of prosgresql database"
-  psql -U ${PGUSER} -h ${database_host} -d ${PGDATABASE} -c 'DROP TABLE IF EXISTS admin, planet_osm_line, planet_osm_point, planet_osm_polygon, planet_osm_roads, water_polygons CASCADE;'
+  psql -h ${database_host} -U ${PGUSER} -d ${PGDATABASE} -c 'DROP TABLE IF EXISTS admin, planet_osm_line, planet_osm_point, planet_osm_polygon, planet_osm_roads, water_polygons CASCADE;'
   echo "reset of prosgresql database completed"
 }
 
 function initial_osm_import() {
   echo "starting initial OSM import"
     psql -h ${database_host} -U ${PGUSER} -d ${PGDATABASE} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
-    osm2pgsql \
-        --create --slim --cache ${WORKSPACE_MEMORY} --number-processes ${WORKSPACE_NCPU} \
-        --hstore -U ${PGUSER} -H ${database_host} -d ${PGDATABASE} -E 3857 \
-        ${pbf_dir}/${filename} 2>&1 | tee ${log_file}
+    imposm import \
+        -config /srv/kartosm/config.json \
+        -overwritecache \
+        -read ${pbf_dir}/${filename} \
+        -diff \
+        -write
 
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
-    echo "osm2pgsql failed to complete initial import"
+    echo "imposm3 failed to complete initial import"
     exit -1
   fi
-  echo "initial OSM import completed"
+  echo "initial OSM import completed, starting production deploy"
+  imposm import \
+        -config /srv/kartosm/config.json \
+        -deployproduction
+
+  if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    echo "imposm3 failed to deploy import"
+    exit -1
+  fi
+  echo "initial OSM import deployed to production schema"
 }
 
 function import_water_lines() {
@@ -103,8 +126,6 @@ function custom_functions_and_indexes() {
       psql -h ${database_host} -U ${PGUSER} -Xd ${PGDATABASE} -f ${sql_file}
     done
   done
-
-  psql -h ${database_host} -U ${PGUSER} -d ${PGDATABASE} -c 'SELECT populate_admin();'
   echo "creation of custom functions and indexes completed"
 }
 
@@ -117,9 +138,13 @@ function cleanup() {
   echo "cleanup completed"
 }
 
-download_pbf
-reset_postgres
-initial_osm_import
-import_water_lines
+#if [ "$scripts_only" = false ]; then
+#  download_pbf
+#  reset_postgres
+#  initial_osm_import
+#fi
+#if [ "$exec_water_polygons" = true ]; then
+#  import_water_lines
+#fi
 custom_functions_and_indexes
 #cleanup

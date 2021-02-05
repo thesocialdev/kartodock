@@ -65,13 +65,15 @@ services:
       # expose_version: false
 
       # Kartotherian variables and sources
-      variables: 
+      variables:
         cassandra-pswd: cassandra
         cassandra-servers:
-        - cassandra
+        - $CASSANDRA_HOST
         cassandra-user: cassandra
         osmdb-pswd: $PGPASSWORD
         osmdb-user: $PGUSER
+        osmdb-host: $PGHOST
+        osmdb-port: $PGPORT
 
       sources: /etc/opt/sources.docker.yaml
 
