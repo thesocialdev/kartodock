@@ -52,33 +52,9 @@ services:
       - cassandra
       - redis
     volumes:
-      - ${APP_CODE_PATH_HOST}/kartotherian-imposm3:/home/kartotherian
-      - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
-    tty: true
-    networks:
-      - frontend
-      - backend
-
-  ### Katotherian ##################################
-  kartotherian-osm2pgsql:
-    build: ./kartotherian
-    ports:
-      - "6534:6533"
-      - "16535:16534"
-    environment:
-      - PGDATABASE=${PGDATABASE}
-      - PGUSER=${PGUSER}
-      - PGPASSWORD=${PGPASSWORD}
-      - PGPORT=5432
-      - PGHOST=postgres-postgis-osm2pgsql
-      - CASSANDRA_HOST=cassandra-osm2pgsql
-    depends_on:
-      - workspace
-      - postgres-postgis-osm2pgsql
-      - cassandra
-      - redis
-    volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
+      - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
+      - ${APP_CODE_PATH_HOST}/kartosm/expiretiles:/srv/expiretiles
     tty: true
     networks:
       - frontend
@@ -104,25 +80,6 @@ services:
     networks:
       - backend
 
-  postgres-postgis-osm2pgsql:
-    build: ./postgres-postgis
-    volumes:
-      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
-#      - ${DATA_PATH_HOST}/imposm:/var/lib/postgresql/data
-    ports:
-      - "5434:5432"
-    environment:
-      - PGDATABASE=${PGDATABASE}
-      - PGUSER=${PGUSER}
-      - PGPASSWORD=${PGPASSWORD}
-      - POSTGRES_DB=${PGDATABASE}
-      - POSTGRES_USER=${PGUSER}
-      - POSTGRES_PASSWORD=${PGPASSWORD}
-    depends_on:
-      - workspace
-    networks:
-      - backend
-
   ### Cassandra ##################################
   cassandra:
     build: ./cassandra
@@ -130,16 +87,6 @@ services:
       - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
       - "${CASSANDRA_PORT}:9042"
-    networks:
-      - backend
-
-  ### Cassandra ##################################
-  cassandra-osm2pgsql:
-    build: ./cassandra
-    volumes:
-      - ${DATA_PATH_HOST}/cassandra-osm2pgsql:/var/lib/cassandra
-    ports:
-      - "9043:9042"
     networks:
       - backend
 

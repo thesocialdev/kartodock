@@ -138,13 +138,13 @@ function cleanup() {
   echo "cleanup completed"
 }
 
-if [ "$scripts_only" = false ]; then
-  download_pbf
-  reset_postgres
-  initial_osm_import
-fi
-if [ "$exec_water_polygons" = true ]; then
-  import_water_lines
-fi
-#custom_functions_and_indexes
+#if [ "$scripts_only" = false ]; then
+#  download_pbf
+#  reset_postgres
+#  initial_osm_import
+#fi
+#if [ "$exec_water_polygons" = true ]; then
+#  import_water_lines
+#fi
+custom_functions_and_indexes
 #cleanup

@@ -12,6 +12,7 @@ APP_CODE_PATH_CONTAINER=/srv
 
 # Choose storage path on your machine. For all storage systems
 DATA_PATH_HOST=../data
+PG_DATA_PATH_HOST=../data
 
 ### Drivers ################################################
 
