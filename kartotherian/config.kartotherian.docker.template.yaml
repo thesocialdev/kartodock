@@ -79,6 +79,7 @@ services:
 
       modules:
       - "tilelive-tmstyle"
+      - "tilelive-http"
       - "@wikimedia/kartotherian-autogen"
       - "@wikimedia/kartotherian-babel"
       - "@wikimedia/kartotherian-cassandra"
