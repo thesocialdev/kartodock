@@ -35,10 +35,12 @@ RUN mkdir -p $GOPATH/src/github.com/omniscale/imposm3 \
  && rm -rf $GOPATH/src/ \
  && rm -rf $GOPATH/pkg/
 
-ENV IMPOSM_DIR=/srv/imposm \
+ENV IMPOSM_DIR=/etc/kartosm \
     # TILES_DIR=/import \
-    IMPOSM_CONFIG=/srv/kartosm/config.json
+    IMPOSM_CONFIG=/etc/kartosm/config.json
 
+COPY ./config.template.json /etc/kartosm/config.template.json
+COPY ./mapping.yml /etc/kartosm/mapping.yml
 COPY osm-initial-import.sh /usr/bin/osm-initial-import
 
 RUN chmod +x /usr/bin/osm-initial-import

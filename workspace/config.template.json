@@ -1,0 +1,9 @@
+{
+    "cachedir": "/etc/kartosm/cache",
+    "diffdir": "/etc/kartosm/diff",
+    "expiretiles_dir": "/etc/kartosm/expiretiles",
+    "expiretiles_zoom": 15,
+    "connection": "postgis: user=$PGUSER password=$PGPASSWORD dbname=$PGDATABASE host=postgres-postgis prefix=NONE",
+    "mapping": "/etc/kartosm/mapping.yml",
+    "replication_url": "https://planet.openstreetmap.org/replication/minute/"
+}
