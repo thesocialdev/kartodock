@@ -12,8 +12,8 @@ pbf_file_url=
 scripts_only=false
 exec_water_polygons=true
 # Prepare config.json
-cp /srv/kartosm/config.template.json /srv/kartosm/config.json && \
-  perl -pe 's/\$([_A-Z]+)/$ENV{$1}/g' -i /srv/kartosm/config.json
+cp /etc/kartosm/config.template.json /etc/kartosm/config.json && \
+  perl -pe 's/\$([_A-Z]+)/$ENV{$1}/g' -i /etc/kartosm/config.json
 
 function show_help() {
   echo "osm-initial-import -p <pbf_file_url> [-H <database_host>] [-s]"
@@ -79,7 +79,7 @@ function initial_osm_import() {
   echo "starting initial OSM import"
     psql -h ${database_host} -U ${PGUSER} -d ${PGDATABASE} -c 'CREATE EXTENSION IF NOT EXISTS postgis; CREATE EXTENSION IF NOT EXISTS hstore;' && \
     imposm import \
-        -config /srv/kartosm/config.json \
+        -config /etc/kartosm/config.json \
         -overwritecache \
         -read ${pbf_dir}/${filename} \
         -diff \
@@ -91,7 +91,7 @@ function initial_osm_import() {
   fi
   echo "initial OSM import completed, starting production deploy"
   imposm import \
-        -config /srv/kartosm/config.json \
+        -config /etc/kartosm/config.json \
         -deployproduction
 
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
@@ -138,13 +138,13 @@ function cleanup() {
   echo "cleanup completed"
 }
 
-#if [ "$scripts_only" = false ]; then
-#  download_pbf
-#  reset_postgres
-#  initial_osm_import
-#fi
-#if [ "$exec_water_polygons" = true ]; then
-#  import_water_lines
-#fi
+if [ "$scripts_only" = false ]; then
+  download_pbf
+  reset_postgres
+  initial_osm_import
+fi
+if [ "$exec_water_polygons" = true ]; then
+  import_water_lines
+fi
 custom_functions_and_indexes
 #cleanup
