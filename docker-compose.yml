@@ -53,11 +53,10 @@ services:
       - postgres-postgis
       - cassandra
       - redis
-      - tegola
     volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
       - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
-      - ${APP_CODE_PATH_HOST}/imposm/expiretiles:/srv/expiretiles
+      - ${DATA_PATH_HOST}/imposm:/srv/imposm
     tty: true
     networks:
       - frontend
@@ -120,6 +119,7 @@ services:
     build: https://github.com/go-spatial/tegola.git#v0.14.x
     volumes:
       - ./tegola/tegola.toml:/etc/tegola.toml
+      - ${DATA_PATH_HOST}/tegola/cache:/etc/cache
     ports:
       - "${TEGOLA_PORT:-8080}:8080"
     networks:

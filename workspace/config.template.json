@@ -1,7 +1,7 @@
 {
-    "cachedir": "/etc/imposm/cache",
-    "diffdir": "/etc/imposm/diff",
-    "expiretiles_dir": "/etc/imposm/expiretiles",
+    "cachedir": "/srv/imposm/cache",
+    "diffdir": "/srv/imposm/diff",
+    "expiretiles_dir": "/srv/imposm/expiretiles",
     "expiretiles_zoom": 15,
     "connection": "postgis: user=$PGUSER password=$PGPASSWORD dbname=$PGDATABASE host=postgres-postgis prefix=NONE",
     "mapping": "/etc/imposm/mapping.yml",
