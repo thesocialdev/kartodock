@@ -136,7 +136,7 @@ services:
 
 ### Tegola ##################################
   tegola:
-    build: https://github.com/go-spatial/tegola.git#v0.13.x
+    build: https://github.com/go-spatial/tegola.git#v0.14.x
     volumes:
       - ./tegola/tegola.toml:/etc/tegola.toml
     ports:
