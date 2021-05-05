@@ -1,8 +1,8 @@
-FROM golang:1.11-buster
+FROM golang:1.14-buster
 
 ARG PG_MAJOR="11"
 ARG IMPOSM_REPO="https://github.com/omniscale/imposm3.git"
-ARG IMPOSM_VERSION="v0.8.1"
+ARG IMPOSM_VERSION="v0.11.1"
 
 RUN apt-get update \
  # install newer packages from backports
@@ -23,9 +23,6 @@ RUN apt-get update \
 RUN mkdir -p $GOPATH/src/github.com/omniscale/imposm3 \
  && cd  $GOPATH/src/github.com/omniscale/imposm3 \
  && go get github.com/tools/godep \
- # && git clone --quiet --depth 1 https://github.com/omniscale/imposm3 \
- #
- # update to current omniscale/imposm3
  && git clone --quiet --depth 1 $IMPOSM_REPO -b $IMPOSM_VERSION \
         $GOPATH/src/github.com/omniscale/imposm3 \
  && make build \
@@ -34,10 +31,6 @@ RUN mkdir -p $GOPATH/src/github.com/omniscale/imposm3 \
  && rm -rf $GOPATH/bin/godep \
  && rm -rf $GOPATH/src/ \
  && rm -rf $GOPATH/pkg/
-
-ENV IMPOSM_DIR=/etc/kartosm \
-    # TILES_DIR=/import \
-    IMPOSM_CONFIG=/etc/kartosm/config.json
 
 COPY ./config.template.json /etc/kartosm/config.template.json
 COPY ./mapping.yml /etc/kartosm/mapping.yml
