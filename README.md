@@ -74,7 +74,6 @@ make clean
 ## TODO
 - [ ] Fix user permissions through the Dockerfiles
 - [ ] Change Cassandra container and create environment variables for authentication
-- [ ] Proper configuration to use Sources and Styles with Mapbox Studio Classic
 - [ ] Refactor dependecy linking for packages not present in the monorepo
 - [ ] Installation script
 - [ ] Implement nodemon for kartotherian/tilerator
