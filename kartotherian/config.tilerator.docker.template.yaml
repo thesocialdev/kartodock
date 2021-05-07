@@ -74,7 +74,8 @@ services:
       sources: /etc/opt/sources.docker.yaml
 
       modules:
-      - tilelive-tmstyle
+      - "tilelive-tmstyle"
+      - "tilelive-http"
       - "@wikimedia/kartotherian-autogen"
       - "@wikimedia/kartotherian-cassandra"
       - "@wikimedia/kartotherian-layermixer"

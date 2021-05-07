@@ -25,8 +25,6 @@ services:
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
-    ports:
-      - "${WORKSPACE_SSH_PORT}:22"
     tty: true
     networks:
       - frontend
@@ -63,9 +61,8 @@ services:
 
 ### PostgreSQL PostGis ##################################
   postgres-postgis:
-    build: ./postgres-postgis
+    image: postgis/postgis:11-3.1
     volumes:
-#      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
       - ${DATA_PATH_HOST}/imposm:/var/lib/postgresql/data
     ports:
       - "${PGPORT}:5432"
@@ -83,7 +80,7 @@ services:
 
   ### Cassandra ##################################
   cassandra:
-    build: ./cassandra
+    image: cassandra:3.11.4  # Production version
     volumes:
       - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
@@ -93,7 +90,7 @@ services:
 
 ### Redis ##################################
   redis:
-    build: ./redis
+    image: redis:latest
     volumes:
         - ${DATA_PATH_HOST}/redis:/data
     ports:
@@ -103,11 +100,7 @@ services:
 
 ### Graphite statsd ##################################
   statsd:
-    image: graphiteapp/graphite-statsd
-    # volumes:
-    #   - ${DATA_PATH_HOST}/graphite/configs:/opt/graphite/conf
-    #   - ${DATA_PATH_HOST}/graphite/data:/opt/graphite/storage
-    #   - ${DATA_PATH_HOST}/statsd:/opt/statsd
+    image: graphiteapp/graphite-statsd:latest
     ports:
       - "8000:80"
       - "2003-2004:2003-2004"
@@ -129,4 +122,11 @@ services:
       - backend
     command: serve --config /etc/tegola.toml
 
-### TODO: Maputnik ##################################
+### Maputnik ##################################
+  maputnik:
+    image: maputnik/editor:latest
+    ports:
+      - "${MAPUTNIK_PORT}:8888"
+    networks:
+      - frontend
+      - backend
