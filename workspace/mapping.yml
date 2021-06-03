@@ -1,6 +1,6 @@
 areas:
   area_tags: [buildings, landuse, leisure, natural, aeroway, amenity]
-  linear_tags: [highway, barrier, boundary]
+  linear_tags: [highway, barrier]
 
 tags:
   load_all: true
@@ -274,7 +274,7 @@ tables:
         - golf_course
         - park
         - playground
-      #aeroway:
+      aeroway: [__any__]
       landuse:
         - wood
         - forest

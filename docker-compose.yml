@@ -25,7 +25,8 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
-      - ./maps-config/osm-bright.tm2source/imposm_mapping.yml:/etc/imposm/mapping.yml
+      - ./workspace/mapping.yml:/etc/imposm/mapping.yml
+      - ./workspace/osm-initial-import.sh:/usr/bin/osm-initial-import
 
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
@@ -57,6 +58,7 @@ services:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
       - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
       - ${DATA_PATH_HOST}/imposm:/srv/imposm
+      - ./kartotherian/sources.docker.yaml:/etc/opt/sources.docker.yaml
     tty: true
     networks:
       - frontend

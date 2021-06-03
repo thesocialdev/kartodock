@@ -15,11 +15,6 @@ genraw:
       port: { var: osmdb-port }
       user: {var: osmdb-user}
       password: {var: osmdb-pswd}
-# expand name_ attributes into individual tags
-gen:
-  uri: json2tags://
-  params:
-    source: {ref: genraw}
 
 # Tegola backend
 #http-tegola:
@@ -72,6 +67,32 @@ beta-cluster-http-tegola:
       - id: poi_label
       - id: road_label
 
+# expand name_ attributes into individual tags
+gen-tegola:
+  uri: json2tags://
+  params:
+#    source: {ref: beta-cluster-http-tegola}
+    source: {ref: http-tegola}
+
+# Mirror requests to a secondary source
+switch:
+  uri: mirror://
+  params:
+    source: {ref: genraw}
+    secondarySource: { ref: beta-cluster-http-tegola }
+    enableMirror: true
+    loadBalancer:
+      bucketSize: 1000 # milliseconds
+      totalBuckets: 10 # number of buckets in the histogram
+      threshold: 0.5 # % of load to the mirrored source
+
+# expand name_ attributes into individual tags
+gen:
+  uri: json2tags://
+  params:
+    source: {ref: switch}
+
+
 # Cassandra storage
 v4:
   public: true
@@ -122,9 +143,9 @@ osm-pbf:
   formats: [pbf]
   uri: overzoom://
   params:
-#    source: {ref: http-tegola}
+    source: {ref: gen-tegola}
 #    source: {ref: beta-cluster-http-tegola}
-    source: { ref: v4 }
+#    source: { ref: v4 }
     maxzoom: 19
   overrideInfo:
     attribution: 'Map data © <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'

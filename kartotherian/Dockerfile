@@ -42,7 +42,6 @@ RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.s
 
 COPY config.tilerator.docker.template.yaml /etc/opt/config.tilerator.docker.template.yaml
 COPY config.kartotherian.docker.template.yaml /etc/opt/config.kartotherian.docker.template.yaml
-COPY sources.docker.yaml /etc/opt/sources.docker.yaml
 COPY generate_config.sh /usr/local/bin/generate_config
 RUN chmod +x /usr/local/bin/generate_config
 

@@ -87,7 +87,7 @@ services:
       - "@wikimedia/kartotherian-overzoom"
       - "@wikimedia/kartotherian-postgres"
       - "@wikimedia/kartotherian-substantial"
-#      - "@wikimedia/kartotherian-tilelive-switch"
+      - "@wikimedia/kartotherian-tilelive-switch"
       - "@kartotherian/tilelive-tmsource"
       - "@kartotherian/tilelive-vector"
       - "@mapbox/tilejson"
