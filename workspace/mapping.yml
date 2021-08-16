@@ -1,9 +1,45 @@
 areas:
   area_tags: [buildings, landuse, leisure, natural, aeroway, amenity]
-  linear_tags: [highway, barrier, boundary]
+  linear_tags: [highway, barrier, boundary]qq
 tags:
   load_all: true
   exclude: [note, "note:*", source, source_ref, "source:*", attribution, comment, fixme, created_by, odbl, "odbl:note", "SK53_bulk:load",  "tiger:*",  "NHD:*", "nhd:*",  "gnis:*",  "geobase:*", "accuracy:meters", "sub_sea:type", "waterway:type",  "KSJ2:*", "yh:*",  "osak:*",  "kms:*",  "ngbe:*",  "naptan:*",  "CLC:*",  "3dshapes:ggmodelk", AND_nosr_r, import, "it:fvg:*"]
+
+generalized_tables:
+  # landuse
+  planet_osm_polygon_landuse_gen_z6:
+    source: planet_osm_polygon_landuse_gen_z7
+    tolerance: 2445.98490513
+    sql_filter: area>power(2445.98490513,2)
+  planet_osm_polygon_landuse_gen_z7:
+    source: planet_osm_polygon_landuse_gen_z8
+    tolerance: 1222.99245256
+    sql_filter: area>power(2445.98490513,2)
+  planet_osm_polygon_landuse_gen_z8:
+    source: planet_osm_polygon_landuse_gen_z9
+    sql_filter: area>power(2445.98490513,2)
+    tolerance: 611.496226281
+  planet_osm_polygon_landuse_gen_z9:
+    source: planet_osm_polygon_landuse_gen_z10
+    sql_filter: area>power(1222.99245256,2)
+    tolerance: 305.748113141
+  planet_osm_polygon_landuse_gen_z10:
+    source: planet_osm_polygon_landuse_gen_z11
+    sql_filter: area>power(611.496226281,2)
+    tolerance: 152.87405657
+  planet_osm_polygon_landuse_gen_z11:
+    source: planet_osm_polygon_landuse_gen_z12
+    sql_filter: area>power(305.748113141,2)
+    tolerance: 76.4370282852
+  planet_osm_polygon_landuse_gen_z12:
+    source: planet_osm_polygon_landuse_gen_z13
+    sql_filter: area>power(152.87405657,2)
+    tolerance: 38.2185141426
+  planet_osm_polygon_landuse_gen_z13:
+    source: planet_osm_polygon_landuse
+    sql_filter: area>power(76.4370282852,2) AND ST_IsValid(way)
+    tolerance: 19.1092570713
+
 tables:
   planet_osm_point:
     type: point
@@ -223,4 +259,46 @@ tables:
     filters:
       require:
         admin_level: ['2', '4']
+        boundary: ['administrative']
 
+  wikidata_relation_members:
+    type: relation_member
+    columns:
+      - name: osm_id
+        type: id
+      - name: member
+        type: member_id
+      - name: index
+        type: member_index
+      - name: role
+        type: member_role
+      - name: type
+        type: member_type
+      - name: geometry
+        type: geometry
+      - name: relname
+        key: name
+        type: string
+      - name: name
+        key: name
+        type: string
+        from_member: true
+      - key: ref
+        name: ref
+        type: string
+      - key: wikidata
+        name: wikidata
+        type: string
+    relation_types:
+      - multipolygon
+      - route
+      - route_master
+      - restriction
+      - boundary
+      - public_transport
+      - destination_sign
+      - waterway
+      - enforcement
+      - connectivity
+    mapping:
+      wikidata: [__any__]

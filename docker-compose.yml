@@ -23,6 +23,8 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
+      - ./workspace/mapping.yml:/etc/imposm/mapping.yml
+
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
     tty: true
@@ -130,3 +132,25 @@ services:
     networks:
       - frontend
       - backend
+
+  osmosis:
+    build:
+      context: ./smoketests
+      dockerfile: build.Dockerfile
+    volumes:
+      - ${DATA_PATH_HOST}/pbf:/etc/pbf
+
+  pgtap:
+    build:
+      context: ./smoketests
+      dockerfile: test.Dockerfile
+    environment:
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ${APP_CODE_PATH_HOST}:/etc/app
