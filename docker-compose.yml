@@ -67,7 +67,7 @@ services:
     volumes:
       - ${DATA_PATH_HOST}/imposm:/var/lib/postgresql/data
     ports:
-      - "${PGPORT}:5432"
+      - "${PGPORT:-5432}:5432"
     environment:
       - PGDATABASE=${PGDATABASE}
       - PGUSER=${PGUSER}
@@ -86,7 +86,7 @@ services:
     volumes:
       - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
-      - "${CASSANDRA_PORT}:9042"
+      - "${CASSANDRA_PORT:-9042}:9042"
     networks:
       - backend
 
@@ -96,7 +96,7 @@ services:
     volumes:
         - ${DATA_PATH_HOST}/redis:/data
     ports:
-      - "${REDIS_PORT}:6379"
+      - "${REDIS_PORT:-6379}:6379"
     networks:
       - backend
 
@@ -119,7 +119,7 @@ services:
     volumes:
       - ./tegola/tegola.toml:/etc/tegola.toml
     ports:
-      - "${TEGOLA_PORT}:8080"
+      - "${TEGOLA_PORT:-8080}:8080"
     networks:
       - backend
     command: serve --config /etc/tegola.toml
@@ -128,7 +128,7 @@ services:
   maputnik:
     image: maputnik/editor:latest
     ports:
-      - "${MAPUTNIK_PORT}:8888"
+      - "${MAPUTNIK_PORT:-8888}:8888"
     networks:
       - frontend
       - backend
