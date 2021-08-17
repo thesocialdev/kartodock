@@ -1,6 +1,6 @@
 areas:
   area_tags: [buildings, landuse, leisure, natural, aeroway, amenity]
-  linear_tags: [highway, barrier, boundary]qq
+  linear_tags: [highway, barrier, boundary]
 tags:
   load_all: true
   exclude: [note, "note:*", source, source_ref, "source:*", attribution, comment, fixme, created_by, odbl, "odbl:note", "SK53_bulk:load",  "tiger:*",  "NHD:*", "nhd:*",  "gnis:*",  "geobase:*", "accuracy:meters", "sub_sea:type", "waterway:type",  "KSJ2:*", "yh:*",  "osak:*",  "kms:*",  "ngbe:*",  "naptan:*",  "CLC:*",  "3dshapes:ggmodelk", AND_nosr_r, import, "it:fvg:*"]
@@ -74,6 +74,7 @@ tables:
         type: hstore_tags
       - name: way
         type: geometry
+
   planet_osm_polygon:
     type: polygon
     mapping:
@@ -179,7 +180,114 @@ tables:
         name: tags
         type: hstore_tags
       - name: way
-        type: geometry
+        type: validated_geometry
+
+  planet_osm_polygon_landuse:
+    type: polygon
+    columns:
+      - name: osm_id
+        type: id
+      - key: aeroway
+        name: aeroway
+        type: string
+      - key: amenity
+        name: amenity
+        type: string
+      - key: area
+        name: area
+        type: area
+      - key: boundary
+        name: boundary
+        type: string
+      - key: landuse
+        name: landuse
+        type: string
+      - key: leisure
+        name: leisure
+        type: string
+      - key: name
+        name: name
+        type: string
+      - key: natural
+        name: natural
+        type: string
+      - name: z_order
+        type: enumerate
+        args:
+          values:
+            - land
+            - island
+            - lan
+            - heath
+            - railway
+            - industrial
+            - commercial
+            - retail
+            - residential
+            - quarry
+            - zoo
+            - vineyard
+            - orchard
+            - scrub
+            - hospital
+            - place_of_worship
+            - theatre
+            - cinema
+            - nature_reserve
+            - parking
+            - fuel
+            - baracks
+            - library
+            - college
+            - school
+            - university
+            - golf_course
+            - allotments
+            - common
+            - pitch
+            - sports_centre
+            - garden
+            - recreation_ground
+            - village_green
+            - wetland
+            - grass
+            - meadow
+            - wood
+            - farmland
+            - farm
+            - farmyard
+            - cemetery
+            - forest
+            - park
+            - playground
+            - footway
+            - pedestrian
+            - water
+      - name: way
+        type: validated_geometry
+    mapping:
+      natural:
+        - wood
+      leisure:
+        - national_reserve
+        - nature_reserve
+        - golf_course
+        - park
+        - playground
+      aeroway: [__any__]
+      landuse:
+        - wood
+        - forest
+        - cemetery
+        - industrial
+        - village_green
+      amenity:
+        - school
+        - university
+        - hospital
+      boundary:
+        - national_park
+
   planet_osm_line:
     type: linestring
     mapping:
@@ -222,6 +330,7 @@ tables:
       - key: z_order
         name: z_order
         type: wayzorder
+
   admin:
     type: relation_member
     mapping:
@@ -260,6 +369,33 @@ tables:
       require:
         admin_level: ['2', '4']
         boundary: ['administrative']
+
+  water:
+    type: polygon
+    mapping:
+      natural: [ "water" ]
+      waterway: [ __any__ ]
+      landuse: [ "reservoir", "pond" ]
+    columns:
+      - name: osm_id
+        type: id
+      - key: landuse
+        name: landuse
+        type: string
+      - key: leisure
+        name: leisure
+        type: string
+      - key: natural
+        name: natural
+        type: string
+      - key: waterway
+        name: waterway
+        type: string
+      - key: way_area
+        name: way_area
+        type: area
+      - name: way
+        type: geometry
 
   wikidata_relation_members:
     type: relation_member

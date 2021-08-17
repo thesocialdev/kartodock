@@ -140,17 +140,17 @@ services:
     volumes:
       - ${DATA_PATH_HOST}/pbf:/etc/pbf
 
-  pgtap:
+  test:
     build:
       context: ./smoketests
       dockerfile: test.Dockerfile
     environment:
-      - PGDATABASE=${PGDATABASE}
-      - PGUSER=${PGUSER}
-      - PGPASSWORD=${PGPASSWORD}
-      - POSTGRES_DB=${PGDATABASE}
-      - POSTGRES_USER=${PGUSER}
-      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE:-gis}
+      - PGUSER=${PGUSER:-default}
+      - PGPASSWORD=${PGPASSWORD:-secret}
+      - POSTGRES_DB=${PGDATABASE:-gis}
+      - POSTGRES_USER=${PGUSER:-default}
+      - POSTGRES_PASSWORD=${PGPASSWORD:-secret}
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - ${APP_CODE_PATH_HOST}:/etc/app
+      - ${APP_CODE_PATH_HOST:-./}kartodock:/etc/kartodock
