@@ -55,4 +55,5 @@ RUN mkdir -p $GOPATH/src/github.com/omniscale/imposm3 \
 
 COPY ./scripts/initdb-pgtap.sh /docker-entrypoint-initdb.d/20_pgtap.sh
 COPY ./scripts/seeddb.sh /docker-entrypoint-initdb.d/30_seed.sh
+COPY ./scripts/runTests.sh /docker-entrypoint-initdb.d/40_test.sh
 COPY ./tests /etc/tests

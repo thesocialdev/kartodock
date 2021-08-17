@@ -23,7 +23,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
-      - ./workspace/mapping.yml:/etc/imposm/mapping.yml
+      - ./common/mapping.yml:/etc/imposm/mapping.yml
 
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
@@ -153,4 +153,4 @@ services:
       - POSTGRES_PASSWORD=${PGPASSWORD:-secret}
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - ${APP_CODE_PATH_HOSTas:-..}/kartodock:/etc/kartodock
+      - ${APP_CODE_PATH_HOST:-..}/kartodock:/etc/kartodock

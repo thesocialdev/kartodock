@@ -9,10 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run test docker image
+      - name: Run test job with docker-compose
         run: docker-compose run --rm test
