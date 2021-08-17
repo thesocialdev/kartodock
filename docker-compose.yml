@@ -153,4 +153,4 @@ services:
       - POSTGRES_PASSWORD=${PGPASSWORD:-secret}
       - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
-      - ${APP_CODE_PATH_HOST:-./}kartodock:/etc/kartodock
+      - ${APP_CODE_PATH_HOSTas:-..}/kartodock:/etc/kartodock

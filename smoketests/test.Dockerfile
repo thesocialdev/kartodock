@@ -14,25 +14,22 @@ RUN apt-get update \
     osmctools \
     postgis \
     osmosis \
- # install postgresql client
- && apt-get install -y --no-install-recommends \
-      postgresql-client-$PG_MAJOR \
+    git \
+    ssh \
+    tar \
+    gzip \
+    ca-certificates \
+    curl \
+    wget \
+    perl \
+    postgresql-11-pgtap \
  && ln -s /usr/lib/libgeos_c.so /usr/lib/libgeos.so \
  && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update \
-      && apt-get install -y --no-install-recommends git ssh tar gzip ca-certificates curl wget perl postgresql-client \
-      && rm -rf /var/lib/apt/lists/*
 
 RUN curl -LO http://xrl.us/cpanm && chmod +x cpanm \
     && ./cpanm TAP::Parser::SourceHandler::pgTAP
 
 ENV PERL5LIB /usr/local/lib/perl5
-
-RUN apt-get update \
-      && apt-cache showpkg postgresql-11-pgtap \
-      && apt-get install -y --no-install-recommends postgresql-11-pgtap \
-      && rm -rf /var/lib/apt/lists/*
 
 RUN wget https://golang.org/dl/go1.14.15.linux-amd64.tar.gz \
     && rm -rf /usr/local/go && tar -C /usr/local -xzf go1.14.15.linux-amd64.tar.gz
