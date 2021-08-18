@@ -667,7 +667,7 @@ tables:
       - name: way
         type: geometry
 
-   building:
+  building:
     type: polygon
     mapping:
       building: [ __any__ ]

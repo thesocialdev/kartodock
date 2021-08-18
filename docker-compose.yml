@@ -10,7 +10,9 @@ services:
 
 ### Workspace Utilities ##################################
   workspace:
-    build: ./workspace
+    build:
+      context: ./
+      dockerfile: workspace/Dockerfile
     environment:
       - PGDATABASE=${PGDATABASE}
       - PGUSER=${PGUSER}
@@ -142,8 +144,8 @@ services:
 
   test:
     build:
-      context: ./smoketests
-      dockerfile: test.Dockerfile
+      context: ./
+      dockerfile: smoketests/test.Dockerfile
     environment:
       - PGDATABASE=${PGDATABASE:-gis}
       - PGUSER=${PGUSER:-default}
