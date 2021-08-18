@@ -48,7 +48,7 @@ clean:
 	docker-compose exec kartotherian bash -c "./clean_node_modules.sh"
 
 imposm_run:
-	docker-compose exec workspace bash -c "imposm run -config /srv/kartosm/config.json" -expiretiles-zoom 15
+	docker-compose exec workspace bash -c "imposm run -config /srv/imposm/config.json" -expiretiles-zoom 15
 
 notify_tilerator:
 	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/tilerator/scripts/tileshell.js  --config /etc/opt/config.tilerator.docker.yaml -j.fromZoom 10 -j.beforeZoom 16 -j.generatorId gen -j.storageId v4 -j.deleteEmpty -j.expdirpath /srv/expiretiles -j.expmask '(expire\.list\.*)|(\.tiles)' -j.statefile /home/kartotherian/expire.state"
