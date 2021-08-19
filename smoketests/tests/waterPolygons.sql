@@ -10,7 +10,7 @@ PREPARE lago_di_garda_planet_osm_polygon AS(
 
 SELECT isnt_empty(
     'lago_di_garda_planet_osm_polygon',
-    'Lake polygon successfully is imported to planet_osm_polygon (Lago di Garda)'
+    'Lake polygon is successfully imported to planet_osm_polygon (Lago di Garda)'
 );
 
 PREPARE lago_di_garda_water AS(
@@ -19,7 +19,7 @@ PREPARE lago_di_garda_water AS(
 
 SELECT isnt_empty(
     'lago_di_garda_water',
-    'Lake polygon successfully is imported to water (Lago di Garda)'
+    'Lake polygon is successfully imported to water (Lago di Garda)'
 );
 
 SELECT is(
@@ -81,7 +81,7 @@ SELECT is(
     ON w.osm_id = p.osm_id
     GROUP BY equals)::text,
     ARRAY[ true ]::text,
-    'water and planet_osm_polygon have the sae geometries for each entry'
+    'water and planet_osm_polygon have the same geometries for each entry for layer_water query'
 );
 
 SELECT * FROM finish();
