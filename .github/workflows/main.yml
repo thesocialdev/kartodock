@@ -11,5 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Update git submodule
+        run: git submodule update --init --recursive --merge
       - name: Run test job with docker-compose
         run: docker-compose run --rm test
