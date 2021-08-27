@@ -80,7 +80,7 @@ v4:
   formats: [pbf]
   uri: cassandra://
   params:
-    maxzoom: 13
+    maxzoom: 16
     keyspace: v4
     cp: {var: cassandra-servers}
     username: {var: cassandra-user}

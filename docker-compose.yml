@@ -25,7 +25,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
-      - ./common/mapping.yml:/etc/imposm/mapping.yml
+      - ./maps-config/osm-bright.tm2source/imposm_mapping.yml:/etc/imposm/mapping.yml
 
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"

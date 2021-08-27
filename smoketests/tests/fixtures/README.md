@@ -47,3 +47,9 @@ With the fragment extracted, will become this JSON:
 relation["name"="Lago di Garda"];
 out geom;
 ```
+
+### Strada del Ponale Overpass Query
+```
+relation["wikidata"="Q1421686"];
+out geom;
+```
