@@ -101,9 +101,9 @@ services:
         allowUserQueries: true
         database: gis
         host: postgres-postgis
-        lineTable: planet_osm_line
+        lineTable: wikidata_relation_members
         password: $PGPASSWORD
-        polygonTable: planet_osm_polygon
+        polygonTable: wikidata_relation_polygon
         table: planet_osm_polygon
         user: $PGUSER
         wikidataQueryService: https://query.wikidata.org/bigdata/namespace/wdq/sparql

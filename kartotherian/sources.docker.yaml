@@ -225,16 +225,16 @@ osm-pbf:
     tiles: ["http://localhost:6533/osm-pbf/{z}/{x}/{y}.pbf"]
 
 # Default OSM PBF source
-osm-pbf-tegola:
-  public: true
-  formats: [pbf]
-  uri: overzoom://
-  params:
-    source: {ref: http-tegola}
-    maxzoom: 19
-  overrideInfo:
-    attribution: 'Map data © <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-    tiles: ["http://localhost:6533/osm-pbf-tegola/{z}/{x}/{y}.pbf"]
+#osm-pbf-tegola:
+#  public: true
+#  formats: [pbf]
+#  uri: overzoom://
+#  params:
+#    source: {ref: http-tegola}
+#    maxzoom: 19
+#  overrideInfo:
+#    attribution: 'Map data © <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+#    tiles: ["http://localhost:6533/osm-pbf-tegola/{z}/{x}/{y}.pbf"]
 
 babel:
   uri: babel://

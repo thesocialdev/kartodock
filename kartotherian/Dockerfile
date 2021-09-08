@@ -35,15 +35,10 @@ RUN apt-get update && apt-get install -y nodejs \
 ENV NVM_DIR $HOME/.nvm
 
 # Avoid using cached layers from this point to allow easy changing of nvm version install
-ARG CACHEBUST=1 
+ARG CACHEBUST=1
 
 RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash \
     && . $NVM_DIR/nvm.sh && nvm install 10.15.2
-
-# Install yarn
-RUN wget -qO - "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add -
-RUN printf "deb https://dl.yarnpkg.com/debian/ stable main" >> /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y --no-install-recommends yarn
 
 COPY config.tilerator.docker.template.yaml /etc/opt/config.tilerator.docker.template.yaml
 COPY config.kartotherian.docker.template.yaml /etc/opt/config.kartotherian.docker.template.yaml
