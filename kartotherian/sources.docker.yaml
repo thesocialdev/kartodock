@@ -22,8 +22,25 @@ gen:
     source: {ref: genraw}
 
 # Tegola backend
-http-tegola:
-  uri: http://tegola:8080/maps/osm/{z}/{x}/{y}.pbf
+#http-tegola:
+#  uri: http://tegola:8080/maps/osm/{z}/{x}/{y}.pbf
+#  setInfo:
+#    vector_layers:
+#      - id: landuse
+#      - id: waterway
+#      - id: water
+#      - id: aeroway
+#      - id: building
+#      - id: road
+#      - id: admin
+#      - id: country_label
+#      - id: place_label
+#      - id: poi_label
+#      - id: road_label
+
+# Tegola beta-cluster backend
+beta-cluster-http-tegola:
+  uri: https://tegola.wmflabs.org/maps/osm/{z}/{x}/{y}.pbf
   setInfo:
     vector_layers:
       - id: landuse
@@ -37,6 +54,25 @@ http-tegola:
       - id: place_label
       - id: poi_label
       - id: road_label
+
+# expand name_ attributes into individual tags
+gen-tegola:
+  uri: json2tags://
+  params:
+    source: {ref: beta-cluster-http-tegola}
+#    source: {ref: http-tegola}
+
+# Mirror requests to a secondary source
+#switch:
+#  uri: mirror://
+#  params:
+#    source: {ref: genraw}
+#    secondarySource: { ref: beta-cluster-http-tegola }
+#    enableMirror: true
+#    loadBalancer:
+#      bucketSize: 1000 # milliseconds
+#      totalBuckets: 10 # number of buckets in the histogram
+#      threshold: 0.5 # % of load to the mirrored source
 
 # Cassandra storage
 v4:
@@ -189,16 +225,16 @@ osm-pbf:
     tiles: ["http://localhost:6533/osm-pbf/{z}/{x}/{y}.pbf"]
 
 # Default OSM PBF source
-osm-pbf-tegola:
-  public: true
-  formats: [pbf]
-  uri: overzoom://
-  params:
-    source: {ref: http-tegola}
-    maxzoom: 19
-  overrideInfo:
-    attribution: 'Map data © <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-    tiles: ["http://localhost:6533/osm-pbf-tegola/{z}/{x}/{y}.pbf"]
+#osm-pbf-tegola:
+#  public: true
+#  formats: [pbf]
+#  uri: overzoom://
+#  params:
+#    source: {ref: http-tegola}
+#    maxzoom: 19
+#  overrideInfo:
+#    attribution: 'Map data © <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+#    tiles: ["http://localhost:6533/osm-pbf-tegola/{z}/{x}/{y}.pbf"]
 
 babel:
   uri: babel://

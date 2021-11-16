@@ -1,3 +1,10 @@
+# [cache]
+# type = "file"
+# basepath = "/etc/cache"
+
+[observer]
+type = "prometheus"
+
 [[providers]]
 name = "osm"
 type = "postgis"

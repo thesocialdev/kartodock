@@ -10,7 +10,9 @@ services:
 
 ### Workspace Utilities ##################################
   workspace:
-    build: ./workspace
+    build:
+      context: ./
+      dockerfile: workspace/Dockerfile
     environment:
       - PGDATABASE=${PGDATABASE}
       - PGUSER=${PGUSER}
@@ -23,6 +25,8 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
+      - ./maps-config/osm-bright.tm2source/imposm_mapping.yml:/etc/imposm/mapping.yml
+
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
     tty: true
@@ -53,7 +57,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
       - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
-      - ${APP_CODE_PATH_HOST}/kartosm/expiretiles:/srv/expiretiles
+      - ${APP_CODE_PATH_HOST}/imposm/expiretiles:/srv/expiretiles
     tty: true
     networks:
       - frontend
@@ -63,9 +67,9 @@ services:
   postgres-postgis:
     image: postgis/postgis:11-3.1
     volumes:
-      - ${DATA_PATH_HOST}/imposm:/var/lib/postgresql/data
+      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
     ports:
-      - "${PGPORT}:5432"
+      - "${PGPORT:-5432}:5432"
     environment:
       - PGDATABASE=${PGDATABASE}
       - PGUSER=${PGUSER}
@@ -84,7 +88,7 @@ services:
     volumes:
       - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
     ports:
-      - "${CASSANDRA_PORT}:9042"
+      - "${CASSANDRA_PORT:-9042}:9042"
     networks:
       - backend
 
@@ -94,7 +98,7 @@ services:
     volumes:
         - ${DATA_PATH_HOST}/redis:/data
     ports:
-      - "${REDIS_PORT}:6379"
+      - "${REDIS_PORT:-6379}:6379"
     networks:
       - backend
 
@@ -117,7 +121,7 @@ services:
     volumes:
       - ./tegola/tegola.toml:/etc/tegola.toml
     ports:
-      - "${TEGOLA_PORT}:8080"
+      - "${TEGOLA_PORT:-8080}:8080"
     networks:
       - backend
     command: serve --config /etc/tegola.toml
@@ -126,7 +130,29 @@ services:
   maputnik:
     image: maputnik/editor:latest
     ports:
-      - "${MAPUTNIK_PORT}:8888"
+      - "${MAPUTNIK_PORT:-8888}:8888"
     networks:
       - frontend
       - backend
+
+  osmosis:
+    build:
+      context: ./smoketests
+      dockerfile: build.Dockerfile
+    volumes:
+      - ${DATA_PATH_HOST}/pbf:/etc/pbf
+
+  test:
+    build:
+      context: ./
+      dockerfile: smoketests/test.Dockerfile
+    environment:
+      - PGDATABASE=${PGDATABASE:-gis}
+      - PGUSER=${PGUSER:-default}
+      - PGPASSWORD=${PGPASSWORD:-secret}
+      - POSTGRES_DB=${PGDATABASE:-gis}
+      - POSTGRES_USER=${PGUSER:-default}
+      - POSTGRES_PASSWORD=${PGPASSWORD:-secret}
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ${APP_CODE_PATH_HOST:-..}/kartodock:/etc/kartodock
