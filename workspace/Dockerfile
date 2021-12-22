@@ -13,6 +13,8 @@ RUN apt-get update \
       osmctools \
       postgis \
       osmosis \
+      locales \
+      locales-all \
  # install postgresql client
  && apt-get install -y --no-install-recommends \
       postgresql-client-$PG_MAJOR \
@@ -32,9 +34,12 @@ RUN mkdir -p $GOPATH/src/github.com/omniscale/imposm3 \
  && rm -rf $GOPATH/src/ \
  && rm -rf $GOPATH/pkg/
 
-COPY ./workspace/config.template.json /etc/imposm/config.template.json
-COPY ./maps-config/osm-bright.tm2source/imposm_mapping.yml /etc/imposm/mapping.yml
-COPY ./workspace/osm-initial-import.sh /usr/bin/osm-initial-import
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+
+COPY ./config.template.json /etc/imposm/config.template.json
+COPY osm-initial-import.sh /usr/bin/osm-initial-import
 
 RUN chmod +x /usr/bin/osm-initial-import
 
