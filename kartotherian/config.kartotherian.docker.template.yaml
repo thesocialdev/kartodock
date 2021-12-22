@@ -64,17 +64,6 @@ services:
       # Uncomment to disable the X-Powered-By header
       # expose_version: false
 
-      # Kartotherian variables and sources
-      variables:
-        cassandra-pswd: cassandra
-        cassandra-servers:
-        - $CASSANDRA_HOST
-        cassandra-user: cassandra
-        osmdb-pswd: $PGPASSWORD
-        osmdb-user: $PGUSER
-        osmdb-host: $PGHOST
-        osmdb-port: $PGPORT
-
       sources: /etc/opt/sources.docker.yaml
 
       modules:
@@ -82,7 +71,6 @@ services:
       - "tilelive-http"
       - "@wikimedia/kartotherian-autogen"
       - "@wikimedia/kartotherian-babel"
-      - "@wikimedia/kartotherian-cassandra"
       - "@wikimedia/kartotherian-layermixer"
       - "@wikimedia/kartotherian-overzoom"
       - "@wikimedia/kartotherian-postgres"

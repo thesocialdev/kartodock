@@ -25,7 +25,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
-      - ./workspace/mapping.yml:/etc/imposm/mapping.yml
+      - ./maps-config/osm-bright.tm2source/imposm_mapping.yml:/etc/imposm/mapping.yml
       - ./workspace/osm-initial-import.sh:/usr/bin/osm-initial-import
 
     extra_hosts:
@@ -47,13 +47,10 @@ services:
       - PGPASSWORD=${PGPASSWORD}
       - PGPORT=5432
       - PGHOST=postgres-postgis
-      - CASSANDRA_HOST=cassandra
-      - CASSANDRA_PORT=9042
     depends_on:
       - workspace
       - postgres-postgis
-      - cassandra
-      - redis
+      - tegola
     volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
       - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
@@ -83,16 +80,6 @@ services:
     networks:
       - backend
 
-  ### Cassandra ##################################
-  cassandra:
-    image: cassandra:3.11.4  # Production version
-    volumes:
-      - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
-    ports:
-      - "${CASSANDRA_PORT:-9042}:9042"
-    networks:
-      - backend
-
 ### Redis ##################################
   redis:
     image: redis:latest
@@ -103,27 +90,24 @@ services:
     networks:
       - backend
 
-### Graphite statsd ##################################
-  statsd:
-    image: graphiteapp/graphite-statsd:latest
-    ports:
-      - "8000:80"
-      - "2003-2004:2003-2004"
-      - "2023-2024:2023-2024"
-      - "8125:8125"
-      - "8126:8126"
-    restart: always
-    networks:
-      - backend
 
 ### Tegola ##################################
   tegola:
-    build: https://github.com/go-spatial/tegola.git#v0.14.x
+    build: https://github.com/go-spatial/tegola.git#v0.14.0
     volumes:
-      - ./tegola/tegola.toml:/etc/tegola.toml
+      - ./maps-config/tegola/tegola.toml:/etc/tegola.toml
       - ${DATA_PATH_HOST}/tegola/cache:/etc/cache
     ports:
       - "${TEGOLA_PORT:-8080}:8080"
+    environment:
+      - DB_HOST=postgres-postgis
+      - DB_PORT=${PGPORT}
+      - DB_USER=${PGUSER}
+      - DB_PASSWORD=${PGPASSWORD}
+      - DB_NAME=${PGDATABASE}
+    depends_on:
+      - postgres-postgis
+      - redis
     networks:
       - backend
     command: serve --config /etc/tegola.toml
@@ -137,6 +121,7 @@ services:
       - frontend
       - backend
 
+### Testing ##################################
   osmosis:
     build:
       context: ./smoketests

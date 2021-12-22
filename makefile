@@ -11,13 +11,6 @@ osm:
 generate_config:
 	docker-compose exec kartotherian generate_config
 
-# Cassandra Keyspace setup https://wikitech.wikimedia.org/wiki/Maps/Keyspace_Setup
-keyspace_setup:
-	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/tilerator/scripts/tileshell.js --config /etc/opt/config.tilerator.docker.yaml --source /etc/opt/sources.docker.yaml"
-
-run_tilerator:
-	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/tilerator/server.js -c /etc/opt/config.tilerator.docker.yaml"
-
 run_kartotherian:
 	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
 
@@ -30,8 +23,6 @@ npm_install:
 npm_link:
 	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2source && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link"
 	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2 && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link"
-	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/tilerator && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link @kartotherian/osm-bright-source"
-	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/tilerator && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link @kartotherian/osm-bright-style"
 	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link @kartotherian/osm-bright-source"
 	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link @kartotherian/osm-bright-style"
 
@@ -40,9 +31,6 @@ clean:
 
 imposm_run:
 	docker-compose exec workspace bash -c "imposm run -config /etc/imposm/config.json" -expiretiles-zoom 15
-
-notify_tilerator:
-	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/tilerator/scripts/tileshell.js  --config /etc/opt/config.tilerator.docker.yaml -j.fromZoom 10 -j.beforeZoom 16 -j.generatorId gen -j.storageId v4 -j.deleteEmpty -j.expdirpath /srv/expiretiles -j.expmask '(expire\.list\.*)|(\.tiles)' -j.statefile /home/kartotherian/expire.state"
 
 # pregen_dequeue:
 #     docker-compose exec tegola /etc/pregenerate-maps-tile.sh
