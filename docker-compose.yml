@@ -10,9 +10,7 @@ services:
 
 ### Workspace Utilities ##################################
   workspace:
-    build:
-      context: ./
-      dockerfile: workspace/Dockerfile
+    build: ./workspace
     environment:
       - PGDATABASE=${PGDATABASE}
       - PGUSER=${PGUSER}
