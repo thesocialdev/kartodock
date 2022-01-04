@@ -41,6 +41,13 @@ ENV LANGUAGE en_US.UTF-8
 COPY ./config.template.json /etc/imposm/config.template.json
 COPY osm-initial-import.sh /usr/bin/osm-initial-import
 
+## Imposm Picker
+COPY ./workspace/imposm-picker/extract-osm-geometry.sh /usr/bin/extract-osm-geometry
+COPY ./workspace/imposm-picker/import-osm-geometry.sh /usr/bin/import-osm-geometry
+COPY ./workspace/imposm-picker/base.osm /etc/imposm-picker/base.osm
+
 RUN chmod +x /usr/bin/osm-initial-import
+RUN chmod +x /usr/bin/extract-osm-geometry
+RUN chmod +x /usr/bin/import-osm-geometry
 
 WORKDIR /srv
