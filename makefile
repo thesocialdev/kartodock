@@ -12,19 +12,19 @@ generate_config:
 	docker-compose exec kartotherian generate_config
 
 run_kartotherian:
-	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && node /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
+	docker-compose exec kartotherian bash -c "node /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
 
 npm_test:
-	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && npm test"
+	docker-compose exec kartotherian bash -c "npm test"
 
 npm_install:
-	docker-compose exec kartotherian bash -c ". /.nvm/nvm.sh && nvm use 10.15.2 && npm install --unsafe-perm"
+	docker-compose exec kartotherian bash -c "npm install --unsafe-perm"
 
 npm_link:
-	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2source && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link"
-	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2 && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link"
-	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link @kartotherian/osm-bright-source"
-	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && . /.nvm/nvm.sh && nvm use 10.15.2 && npm link @kartotherian/osm-bright-style"
+	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2source && npm link"
+	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2 && npm link"
+	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && npm link @kartotherian/osm-bright-source"
+	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && npm link @kartotherian/osm-bright-style"
 
 clean:
 	docker-compose exec kartotherian bash -c "./clean_node_modules.sh"

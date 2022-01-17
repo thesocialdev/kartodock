@@ -33,7 +33,7 @@ services:
       - frontend
       - backend
 
-### Katotherian ##################################
+### Kartotherian ##################################
   kartotherian:
     build: ./kartotherian
     ports:
