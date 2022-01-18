@@ -18,7 +18,7 @@ npm_test:
 	docker-compose exec kartotherian bash -c "npm test"
 
 npm_install:
-	docker-compose exec kartotherian bash -c "npm install --unsafe-perm"
+	docker-compose exec kartotherian bash -c "npm install --unsafe-perm --loglevel verbose"
 
 npm_link:
 	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2source && npm link"

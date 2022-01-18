@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y nodejs npm \
     git \
     wget \
     python \
+    python3-mapnik \
     build-essential \
     apt-transport-https \
     ca-certificates \
@@ -25,6 +26,10 @@ RUN apt-get update && apt-get install -y nodejs npm \
     libmapbox-variant-dev \
     libboost-program-options-dev \
     libboost-thread-dev \
+    libmapnik3.1 \
+    libmapnik-dev \
+    mapnik-utils \
+    mapnik-doc \
     && rm -rf /var/lib/apt/lists/*
 
 # Explicitly set $HOME variable to avoid an issue with nvm setup
