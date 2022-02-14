@@ -26,8 +26,6 @@ services:
       - ./maps-config/osm-bright.tm2source/imposm_mapping.yml:/etc/imposm/mapping.yml
       - ./workspace/osm-initial-import.sh:/usr/bin/osm-initial-import
 
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
     tty: true
     networks:
       - frontend
@@ -58,6 +56,8 @@ services:
     networks:
       - frontend
       - backend
+    extra_hosts:
+      - dev.wiki.local.wmftest.net:host-gateway
 
 ### PostgreSQL PostGis ##################################
   postgres-postgis:

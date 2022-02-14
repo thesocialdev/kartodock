@@ -22,11 +22,6 @@ VOLUMES_DRIVER=local
 # All Networks driver
 NETWORKS_DRIVER=bridge
 
-### Docker Host IP ########################################
-
-# Enter your Docker Host IP (will be appended to /etc/hosts). Default is `10.0.75.1`
-DOCKER_HOST_IP=172.17.0.1
-
 ### WORKSPACE ########################################
 
 WORKSPACE_SSH_PORT=2221
