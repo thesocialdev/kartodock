@@ -94,9 +94,10 @@ services:
         user: $PGUSER
         wikidataQueryService: https://query.wikidata.org/bigdata/namespace/wdq/sparql
 
-      # allowedDomains:
-      #   http:
-      #     - localhost:8080
+      allowedDomains:
+         http:
+           - localhost:8080
+           - dev.wiki.local.wmftest.net:8080
       #     - 127.0.0.1:8080
       #     - wmflabs.org
       #   https:
