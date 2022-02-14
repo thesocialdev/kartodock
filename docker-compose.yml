@@ -58,6 +58,9 @@ services:
     networks:
       - frontend
       - backend
+    extra_hosts:
+      # FIXME: dynamically get host gateway
+      - dev.wiki.local.wmftest.net:172.17.0.1
 
 ### PostgreSQL PostGis ##################################
   postgres-postgis:
