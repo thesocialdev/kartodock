@@ -108,6 +108,7 @@ services:
       - redis
     networks:
       - backend
+    restart: on-failure:5
     command: serve --config /etc/tegola.toml
 
 ### Maputnik ##################################
