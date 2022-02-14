@@ -11,14 +11,15 @@ By default `APP_CODE_PATH_HOST=../`, the directory tree should be something like
 ```
 ${APP_CODE_PATH_HOST}/
 ├── kartodock
-└──  kartotherian
+└── kartotherian
 ```
 
 **Beware of memory constraints of your docker setup. The installation will fail with limited memory availability. See this [issue](https://github.com/thesocialdev/kartodock/issues/6) for more details.**
 
-To start the setup execute the following commands: 
+To start the setup execute the following commands:
 ```
 cd kartodock
+git submodule update -i --recursive
 cp env-example .env
 docker-compose up kartotherian
 make clean
