@@ -31,8 +31,7 @@ RUN apt-get clean && apt-get update && apt-get install -y nodejs npm \
     mapnik-doc \
     && rm -rf /var/lib/apt/lists/*
 
-# Avoid using cached layers from this point to allow easy changing of nvm version install
-ARG CACHEBUST=1
+RUN npm i -g nodemon
 
 COPY config.kartotherian.docker.template.yaml /etc/opt/config.kartotherian.docker.template.yaml
 COPY generate_config.sh /usr/local/bin/generate_config

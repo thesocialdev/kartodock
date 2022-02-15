@@ -12,7 +12,7 @@ generate_config:
 	docker-compose exec kartotherian generate_config
 
 run_kartotherian:
-	docker-compose exec kartotherian bash -c "node /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
+	docker-compose exec kartotherian bash -c "nodemon --ext js,json,yaml --signal SIGHUP /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
 
 npm_test:
 	docker-compose exec kartotherian bash -c "npm test"
