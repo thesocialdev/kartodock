@@ -1,6 +1,6 @@
-FROM debian:buster
+FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y nodejs \
+RUN apt-get clean && apt-get update && apt-get install -y nodejs npm \
     git \
     wget \
     python \
@@ -25,20 +25,14 @@ RUN apt-get update && apt-get install -y nodejs \
     libmapbox-variant-dev \
     libboost-program-options-dev \
     libboost-thread-dev \
-    apt-transport-https \
-    libmapnik3.0 \
+    libmapnik3.1 \
     libmapnik-dev \
     mapnik-utils \
     mapnik-doc \
     && rm -rf /var/lib/apt/lists/*
 
-ENV NVM_DIR $HOME/.nvm
-
 # Avoid using cached layers from this point to allow easy changing of nvm version install
 ARG CACHEBUST=1
-
-RUN wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash \
-    && . $NVM_DIR/nvm.sh && nvm install 10.15.2
 
 COPY config.kartotherian.docker.template.yaml /etc/opt/config.kartotherian.docker.template.yaml
 COPY generate_config.sh /usr/local/bin/generate_config

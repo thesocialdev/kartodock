@@ -33,7 +33,7 @@ services:
       - frontend
       - backend
 
-### Katotherian ##################################
+### Kartotherian ##################################
   kartotherian:
     build: ./kartotherian
     ports:
@@ -108,6 +108,7 @@ services:
       - redis
     networks:
       - backend
+    restart: on-failure:5
     command: serve --config /etc/tegola.toml
 
 ### Maputnik ##################################
