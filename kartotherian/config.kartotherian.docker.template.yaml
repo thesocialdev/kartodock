@@ -16,11 +16,11 @@ logging:
 #    host: logstash1003.eqiad.wmnet
 #    port: 12201
 
-# Statsd metrics reporter
+# Prometheus metrics reporter
 metrics:
-  #type: info
-  #host: localhost
-  #port: 8125
+  type: prometheus
+  host: localhost
+  port: 9090
 
 services:
   - name: kartotherian
@@ -64,51 +64,40 @@ services:
       # Uncomment to disable the X-Powered-By header
       # expose_version: false
 
-      # Kartotherian variables and sources
-      variables:
-        cassandra-pswd: cassandra
-        cassandra-servers:
-        - $CASSANDRA_HOST
-        cassandra-user: cassandra
-        osmdb-pswd: $PGPASSWORD
-        osmdb-user: $PGUSER
-        osmdb-host: $PGHOST
-        osmdb-port: $PGPORT
-
       sources: /etc/opt/sources.docker.yaml
 
       modules:
       - "tilelive-tmstyle"
       - "tilelive-http"
-      - "@wikimedia/kartotherian-autogen"
-      - "@wikimedia/kartotherian-babel"
-      - "@wikimedia/kartotherian-cassandra"
-      - "@wikimedia/kartotherian-layermixer"
-      - "@wikimedia/kartotherian-overzoom"
-      - "@wikimedia/kartotherian-postgres"
-      - "@wikimedia/kartotherian-substantial"
+      - "../lib/autogen"
+      - "../lib/babel"
+      - "../lib/overzoom"
+      - "../lib/substantial"
+      # - "@wikimedia/kartotherian-tilelive-switch"
       - "@kartotherian/tilelive-tmsource"
       - "@kartotherian/tilelive-vector"
       - "@mapbox/tilejson"
 
       requestHandlers:
-      - "@wikimedia/kartotherian-maki"
-      - "@wikimedia/kartotherian-snapshot"
+      - "../lib/maki"
+      - "../lib/snapshot"
+      - "../lib/geoshapes"
 
       geoshapes:
         allowUserQueries: true
         database: gis
         host: postgres-postgis
-        lineTable: planet_osm_line
+        lineTable: wikidata_relation_members
         password: $PGPASSWORD
-        polygonTable: planet_osm_polygon
+        polygonTable: wikidata_relation_polygon
         table: planet_osm_polygon
         user: $PGUSER
         wikidataQueryService: https://query.wikidata.org/bigdata/namespace/wdq/sparql
 
-      # allowedDomains:
-      #   http:
-      #     - localhost:8080
+      allowedDomains:
+         http:
+           - localhost
+           - dev.wiki.local.wmftest.net
       #     - 127.0.0.1:8080
       #     - wmflabs.org
       #   https:

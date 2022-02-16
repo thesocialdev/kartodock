@@ -38,16 +38,17 @@ WORKSPACE_MEMORY=4096
 PGDATABASE=gis
 PGUSER=default
 PGPASSWORD=secret
+# TODO 5533
 PGPORT=5432
 
-### REDIS #################################################
+### REDIS ########################################
 
 REDIS_PORT=6379
 
-### CASSANDRA #################################################
+### TEGOLA ########################################
 
-CASSANDRA_PORT=9042
+TEGOLA_PORT=9090
 
-### TEGOLA #################################################
+### MAPUTNIK ########################################
 
-TEGOLA_PORT=8080
+MAPUTNIK_PORT=8888

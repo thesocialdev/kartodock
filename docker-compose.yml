@@ -23,16 +23,17 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ${DATA_PATH_HOST}/pbf:${APP_CODE_PATH_CONTAINER}/pbf
+      - ./maps-config/osm-bright.tm2source/imposm_mapping.yml:/etc/imposm/mapping.yml
+      - ./workspace/osm-initial-import.sh:/usr/bin/osm-initial-import
+
     extra_hosts:
       - "dockerhost:${DOCKER_HOST_IP}"
-    ports:
-      - "${WORKSPACE_SSH_PORT}:22"
     tty: true
     networks:
       - frontend
       - backend
 
-### Katotherian ##################################
+### Kartotherian ##################################
   kartotherian:
     build: ./kartotherian
     ports:
@@ -44,31 +45,30 @@ services:
       - PGPASSWORD=${PGPASSWORD}
       - PGPORT=5432
       - PGHOST=postgres-postgis
-      - CASSANDRA_HOST=cassandra
-      - CASSANDRA_PORT=9042
     depends_on:
       - workspace
       - postgres-postgis
-      - cassandra
-      - redis
       - tegola
     volumes:
       - ${APP_CODE_PATH_HOST}/kartotherian:/home/kartotherian
       - ${APP_CODE_PATH_HOST}/dependencies:/srv/dependencies
-      - ${APP_CODE_PATH_HOST}/kartosm/expiretiles:/srv/expiretiles
+      - ${DATA_PATH_HOST}/imposm:/srv/imposm
+      - ./kartotherian/sources.docker.yaml:/etc/opt/sources.docker.yaml
     tty: true
     networks:
       - frontend
       - backend
+    extra_hosts:
+      # FIXME: dynamically get host gateway
+      - dev.wiki.local.wmftest.net:172.17.0.1
 
 ### PostgreSQL PostGis ##################################
   postgres-postgis:
-    build: ./postgres-postgis
+    image: postgis/postgis:11-3.1
     volumes:
-#      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
-      - ${DATA_PATH_HOST}/imposm:/var/lib/postgresql/data
+      - ${DATA_PATH_HOST}/postgres:/var/lib/postgresql/data
     ports:
-      - "${PGPORT}:5432"
+      - "${PGPORT:-5432}:5432"
     environment:
       - PGDATABASE=${PGDATABASE}
       - PGUSER=${PGUSER}
@@ -81,68 +81,67 @@ services:
     networks:
       - backend
 
-  ### Cassandra ##################################
-  cassandra:
-    build: ./cassandra
-    volumes:
-      - ${DATA_PATH_HOST}/cassandra:/var/lib/cassandra
-    ports:
-      - "${CASSANDRA_PORT}:9042"
-    networks:
-      - backend
-
 ### Redis ##################################
   redis:
-    build: ./redis
+    image: redis:latest
     volumes:
         - ${DATA_PATH_HOST}/redis:/data
     ports:
-      - "${REDIS_PORT}:6379"
+      - "${REDIS_PORT:-6379}:6379"
     networks:
       - backend
 
-### Mapbox Studio Classic ##################################
-  mapbox-studio-classic:
-    build: ./mapbox-studio-classic
-    volumes:
-      - ${APP_CODE_PATH_HOST}:/root/source
-      - ${DATA_PATH_HOST}/.mapbox-studio:/root/.mapbox-studio
-    ports:
-      - "3000:3000"
-    depends_on:
-      - workspace
-      - postgres-postgis
-    environment:
-      - DOCKER_HOST_IP=${DOCKER_HOST_IP}
-    networks:
-      - frontend
-      - backend
-### Graphite statsd ##################################
-  statsd:
-    image: graphiteapp/graphite-statsd
-    # volumes:
-    #   - ${DATA_PATH_HOST}/graphite/configs:/opt/graphite/conf
-    #   - ${DATA_PATH_HOST}/graphite/data:/opt/graphite/storage
-    #   - ${DATA_PATH_HOST}/statsd:/opt/statsd
-    ports:
-      - "8000:80"
-      - "2003-2004:2003-2004"
-      - "2023-2024:2023-2024"
-      - "8125:8125"
-      - "8126:8126"
-    restart: always
-    networks:
-      - backend
 
 ### Tegola ##################################
   tegola:
-    build: https://github.com/go-spatial/tegola.git#v0.13.x
+    image: gospatial/tegola:v0.14.0
     volumes:
-      - ./tegola/tegola.toml:/etc/tegola.toml
+      - ./maps-config/tegola/tegola.toml:/etc/tegola.toml
+      - ${DATA_PATH_HOST}/tegola/cache:/etc/cache
     ports:
-      - "${TEGOLA_PORT}:8080"
+      - "${TEGOLA_PORT:-8080}:8080"
+    environment:
+      - DB_HOST=postgres-postgis
+      - DB_PORT=${PGPORT}
+      - DB_USER=${PGUSER}
+      - DB_PASSWORD=${PGPASSWORD}
+      - DB_NAME=${PGDATABASE}
+    depends_on:
+      - postgres-postgis
+      - redis
     networks:
       - backend
+    restart: on-failure:5
     command: serve --config /etc/tegola.toml
 
-### TODO: Maputnik ##################################
+### Maputnik ##################################
+  maputnik:
+    image: maputnik/editor:latest
+    ports:
+      - "${MAPUTNIK_PORT:-8888}:8888"
+    networks:
+      - frontend
+      - backend
+
+### Testing ##################################
+  osmosis:
+    build:
+      context: ./smoketests
+      dockerfile: build.Dockerfile
+    volumes:
+      - ${DATA_PATH_HOST}/pbf:/etc/pbf
+
+  test:
+    build:
+      context: ./
+      dockerfile: smoketests/test.Dockerfile
+    environment:
+      - PGDATABASE=${PGDATABASE:-gis}
+      - PGUSER=${PGUSER:-default}
+      - PGPASSWORD=${PGPASSWORD:-secret}
+      - POSTGRES_DB=${PGDATABASE:-gis}
+      - POSTGRES_USER=${PGUSER:-default}
+      - POSTGRES_PASSWORD=${PGPASSWORD:-secret}
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ${APP_CODE_PATH_HOST:-..}/kartodock:/etc/kartodock

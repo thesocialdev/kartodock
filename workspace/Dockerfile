@@ -1,8 +1,8 @@
-FROM golang:1.11-buster
+FROM golang:1.14-buster
 
 ARG PG_MAJOR="11"
 ARG IMPOSM_REPO="https://github.com/omniscale/imposm3.git"
-ARG IMPOSM_VERSION="v0.8.1"
+ARG IMPOSM_VERSION="v0.11.1"
 
 RUN apt-get update \
  # install newer packages from backports
@@ -13,6 +13,8 @@ RUN apt-get update \
       osmctools \
       postgis \
       osmosis \
+      locales \
+      locales-all \
  # install postgresql client
  && apt-get install -y --no-install-recommends \
       postgresql-client-$PG_MAJOR \
@@ -23,9 +25,6 @@ RUN apt-get update \
 RUN mkdir -p $GOPATH/src/github.com/omniscale/imposm3 \
  && cd  $GOPATH/src/github.com/omniscale/imposm3 \
  && go get github.com/tools/godep \
- # && git clone --quiet --depth 1 https://github.com/omniscale/imposm3 \
- #
- # update to current omniscale/imposm3
  && git clone --quiet --depth 1 $IMPOSM_REPO -b $IMPOSM_VERSION \
         $GOPATH/src/github.com/omniscale/imposm3 \
  && make build \
@@ -35,12 +34,20 @@ RUN mkdir -p $GOPATH/src/github.com/omniscale/imposm3 \
  && rm -rf $GOPATH/src/ \
  && rm -rf $GOPATH/pkg/
 
-ENV IMPOSM_DIR=/srv/imposm \
-    # TILES_DIR=/import \
-    IMPOSM_CONFIG=/srv/kartosm/config.json
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
+COPY ./config.template.json /etc/imposm/config.template.json
 COPY osm-initial-import.sh /usr/bin/osm-initial-import
 
+## Imposm Picker
+COPY ./imposm-picker/extract-osm-geometry.sh /usr/bin/extract-osm-geometry
+COPY ./imposm-picker/import-osm-geometry.sh /usr/bin/import-osm-geometry
+COPY ./imposm-picker/base.osm /etc/imposm-picker/base.osm
+
 RUN chmod +x /usr/bin/osm-initial-import
+RUN chmod +x /usr/bin/extract-osm-geometry
+RUN chmod +x /usr/bin/import-osm-geometry
 
 WORKDIR /srv

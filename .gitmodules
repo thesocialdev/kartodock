@@ -1,3 +1,6 @@
 [submodule "kosmtik"]
 	path = kosmtik
 	url = git@github.com:Joxit/docker-kosmtik.git
+[submodule "maps-config"]
+	path = maps-config
+	url = https://github.com/wikimedia/maps-config.git

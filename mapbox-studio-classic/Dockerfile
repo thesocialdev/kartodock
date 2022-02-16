@@ -1,1 +1,0 @@
-FROM stepankuzmin/mapbox-studio-classic
