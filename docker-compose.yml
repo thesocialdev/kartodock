@@ -91,7 +91,7 @@ services:
 
 ### Tegola ##################################
   tegola:
-    build: https://github.com/go-spatial/tegola.git#v0.14.0
+    image: gospatial/tegola:v0.14.0
     volumes:
       - ./maps-config/tegola/tegola.toml:/etc/tegola.toml
       - ${DATA_PATH_HOST}/tegola/cache:/etc/cache
