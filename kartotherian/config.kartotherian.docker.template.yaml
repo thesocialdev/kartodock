@@ -69,19 +69,19 @@ services:
       modules:
       - "tilelive-tmstyle"
       - "tilelive-http"
-      - "@wikimedia/kartotherian-autogen"
-      - "@wikimedia/kartotherian-babel"
-      - "@wikimedia/kartotherian-overzoom"
-      - "@wikimedia/kartotherian-substantial"
+      - "../lib/autogen"
+      - "../lib/babel"
+      - "../lib/overzoom"
+      - "../lib/substantial"
       # - "@wikimedia/kartotherian-tilelive-switch"
       - "@kartotherian/tilelive-tmsource"
       - "@kartotherian/tilelive-vector"
       - "@mapbox/tilejson"
 
       requestHandlers:
-      - "@wikimedia/kartotherian-maki"
-      - "@wikimedia/kartotherian-snapshot"
-      - "@wikimedia/kartotherian-geoshapes"
+      - "../lib/maki"
+      - "../lib/snapshot"
+      - "../lib/geoshapes"
 
       geoshapes:
         allowUserQueries: true

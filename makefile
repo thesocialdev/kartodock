@@ -12,19 +12,20 @@ generate_config:
 	docker-compose exec kartotherian generate_config
 
 run_kartotherian:
-	docker-compose exec kartotherian bash -c "nodemon --ext js,json,yaml --signal SIGHUP /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
+	docker-compose exec kartotherian bash -c "nodemon --ext js,json,yaml --signal SIGHUP server.js -c /etc/opt/config.kartotherian.docker.yaml"
 
 npm_test:
 	docker-compose exec kartotherian bash -c "npm test"
 
+# FIXME: Waiting for mapnik update to always build from source.
 npm_install:
-	docker-compose exec kartotherian bash -c "npm install --unsafe-perm --loglevel verbose"
+	docker-compose exec kartotherian bash -c "npm install --unsafe-perm --loglevel verbose --build-from-source=@kartotherian/mapnik"
 
 npm_link:
 	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2source && npm link"
 	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2 && npm link"
-	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && npm link @kartotherian/osm-bright-source"
-	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && npm link @kartotherian/osm-bright-style"
+	docker-compose exec kartotherian bash -c "npm link @kartotherian/osm-bright-source"
+	docker-compose exec kartotherian bash -c "npm link @kartotherian/osm-bright-style"
 
 clean:
 	docker-compose exec kartotherian bash -c "./clean_node_modules.sh"
