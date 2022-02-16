@@ -12,13 +12,13 @@ generate_config:
 	docker-compose exec kartotherian generate_config
 
 run_kartotherian:
-	docker-compose exec kartotherian bash -c "nodemon --ext js,json,yaml --signal SIGHUP /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml"
+	docker-compose exec kartotherian nodemon --ext js,json,yaml --signal SIGHUP /home/kartotherian/packages/kartotherian/server.js -c /etc/opt/config.kartotherian.docker.yaml
 
 npm_test:
-	docker-compose exec kartotherian bash -c "npm test"
+	docker-compose exec kartotherian npm test
 
 npm_install:
-	docker-compose exec kartotherian bash -c "npm install --unsafe-perm --loglevel verbose"
+	docker-compose exec kartotherian bash npm install --unsafe-perm --loglevel verbose
 
 npm_link:
 	docker-compose exec kartotherian bash -c "cd /srv/dependencies/osm-bright.tm2source && npm link"
@@ -27,10 +27,10 @@ npm_link:
 	docker-compose exec kartotherian bash -c "cd /home/kartotherian/packages/kartotherian && npm link @kartotherian/osm-bright-style"
 
 clean:
-	docker-compose exec kartotherian bash -c "./clean_node_modules.sh"
+	docker-compose exec kartotherian ./clean_node_modules.sh
 
 imposm_run:
-	docker-compose exec workspace bash -c "imposm run -config /etc/imposm/config.json" -expiretiles-zoom 15
+	docker-compose exec workspace imposm run -config /etc/imposm/config.json -expiretiles-zoom 15
 
 # pregen_dequeue:
 #     docker-compose exec tegola /etc/pregenerate-maps-tile.sh
